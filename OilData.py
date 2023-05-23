@@ -51,7 +51,7 @@ def FindCheapOilStation():  #gasStationList에 주유소 데이터를 담는 함
         gasStationList.append(gs)
         gs.ShowInfo()
 
-def FindTodayOilPrice():    #오늘 기름 평균값을 알려주는 함수(Dict로 리턴)
+def GetTodayOilPrice():    #오늘 기름 평균값을 알려주는 함수(Dict로 리턴)
     url_todayOilPrice = f'http://www.opinet.co.kr/api/avgAllPrice.do?code={OilAPIcode}&out=xml'
     result_todayOilPrice = xmltodict.parse(requests.get(url_todayOilPrice).content)
 
@@ -61,11 +61,29 @@ def FindTodayOilPrice():    #오늘 기름 평균값을 알려주는 함수(Dict
     print(todayOil)
     return todayOil
 
+def GetLocalOilPrice():
+    url_localOilPrice = f'http://www.opinet.co.kr/api/avgSidoPrice.do?code={OilAPIcode}&out=xml'
+    result_localOilPrice = xmltodict.parse(requests.get(url_localOilPrice).content)
+
+    localPrice = {}
+
+    for i, gas in enumerate(result_localOilPrice['RESULT']['OIL']):
+        if i % 5 == 0:
+            localPrice[gas['SIDONM']] = {}
+            localPrice[gas['SIDONM']]["휘발유"] = gas['PRICE']
+        if i % 5 == 1:
+            localPrice[gas['SIDONM']]["고급 휘발유"] = gas['PRICE']
+        if i % 5 == 3:
+            localPrice[gas['SIDONM']]["경유"] = gas['PRICE']
+    print("asdfsfdhgfdgdfadghngfjhdsfg")
+    for gas in localPrice:
+        print(gas + " : " ,localPrice[gas])
+
 oilName = "경유"
 localCode = "0116"
 FindCheapOilStation()
-FindTodayOilPrice()
-
+GetTodayOilPrice()
+GetLocalOilPrice()
 
 
 

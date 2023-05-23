@@ -53,7 +53,7 @@ class Program:
         frame1 = tk.Frame(self.window)  
         frame1.pack(side=tk.TOP)
         #------------------------------지도를 그리는 캔버스-----------------------------------          START
-        photo = ImageTk.PhotoImage(MapData.image)
+        photo = ImageTk.PhotoImage(MapData.image)   #지도이미지
         mapLabel = tk.Label(frame1, image=photo, width=MapWidth, height=MapHeight)
         mapLabel.pack(side=tk.RIGHT)
         #------------------------------지도를 그리는 캔버스-----------------------------------          END
