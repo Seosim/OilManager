@@ -5,13 +5,8 @@ import json
 
 from KeyData import *
 
-
-def addr_to_lat_lon(addr):  #주소를 위도 경도로 반환하는 함수
-    posUrl = 'https://dapi.kakao.com/v2/local/search/address.json?query={address}'.format(address=addr)
-    headers = {"Authorization": "KakaoAK " + kakaoAPIcode}
-    posResult = json.loads(str(requests.get(posUrl, headers=headers).text))
-    match_first = posResult['documents'][0]['address']
-    return float(match_first['x']), float(match_first['y'])
+oilName = "경유"
+localCode = "0116"
 
 class GasStation:
     def __init__(self, name, roadName, price, id):
@@ -34,86 +29,86 @@ class GasStation:
     def getPos(self):
         return self.x, self.y
 
-gasStationList = [] #최저가 주유소 리스트
+class OilAPI:
+    def __init__(self):
+        self.localCode = "0116"
+        self.oilName = "경유"
 
-def FindCheapOilStation():  #gasStationList에 주유소 데이터를 담는 함수
-    global gasStationList
-    global oilName, localCode
+        self.gasStationList = []
+        self.todayOil = dict()
+        self.localPrice = dict()
+        self.currentPrice = dict()
 
-    if oilName == '경유': oilCode = 'D047'
-    elif oilName == '휘발유': oilCode = 'B027'
-    elif oilName == '고급휘발유' : oilCode = 'B034'
+        self.FindCheapOilStation()
+        self.GetTodayOilPrice()
+        self.GetLocalOilPrice()
+        self.GetCurrent7DaysPrice()
 
-    url_cheapOS = f"http://www.opinet.co.kr/api/lowTop10.do?code=F230511124&out=xml&prodcd={oilCode}&area={localCode}&cnt=10"
-    result_cheapOS = xmltodict.parse(requests.get(url_cheapOS).content)
-    for gas in result_cheapOS['RESULT']['OIL']:
-        gs = GasStation(gas['OS_NM'], gas['NEW_ADR'], gas['PRICE'], gas['UNI_ID'])
-        gasStationList.append(gs)
-        gs.ShowInfo()
+    def FindCheapOilStation(self):  # gasStationList에 주유소 데이터를 담는 함수
+        if self.oilName == '경유':
+            oilCode = 'D047'
+        elif self.oilName == '휘발유':
+            oilCode = 'B027'
+        elif self.oilName == '고급휘발유':
+            oilCode = 'B034'
 
-def GetTodayOilPrice():    #오늘 기름 평균값을 알려주는 함수(Dict로 리턴)
-    url_todayOilPrice = f'http://www.opinet.co.kr/api/avgAllPrice.do?code={OilAPIcode}&out=xml'
-    result_todayOilPrice = xmltodict.parse(requests.get(url_todayOilPrice).content)
+        url_cheapOS = f"http://www.opinet.co.kr/api/lowTop10.do?code=F230511124&out=xml&prodcd={oilCode}&area={self.localCode}&cnt=10"
+        result_cheapOS = xmltodict.parse(requests.get(url_cheapOS).content)
+        for gas in result_cheapOS['RESULT']['OIL']:
+            gs = GasStation(gas['OS_NM'], gas['NEW_ADR'], gas['PRICE'], gas['UNI_ID'])
+            self.gasStationList.append(gs)
 
-    todayOil = {"고급휘발유" : (result_todayOilPrice['RESULT']['OIL'][0]['PRICE'],result_todayOilPrice['RESULT']['OIL'][0]['DIFF']),
-                "휘발유" : (result_todayOilPrice['RESULT']['OIL'][1]['PRICE'],result_todayOilPrice['RESULT']['OIL'][1]['DIFF']),
-                "경유" : (result_todayOilPrice['RESULT']['OIL'][2]['PRICE'],result_todayOilPrice['RESULT']['OIL'][2]['DIFF'])}
-    print(todayOil)
-    return todayOil
+    def GetTodayOilPrice(self):  # 오늘 기름 평균값을 알려주는 함수(Dict로 리턴)
+        url_todayOilPrice = f'http://www.opinet.co.kr/api/avgAllPrice.do?code={OilAPIcode}&out=xml'
+        result_todayOilPrice = xmltodict.parse(requests.get(url_todayOilPrice).content)
 
-def GetLocalOilPrice():
-    url_localOilPrice = f'http://www.opinet.co.kr/api/avgSidoPrice.do?code={OilAPIcode}&out=xml'
-    result_localOilPrice = xmltodict.parse(requests.get(url_localOilPrice).content)
+        self.todayOil = {"고급휘발유": (result_todayOilPrice['RESULT']['OIL'][0]['PRICE'], result_todayOilPrice['RESULT']['OIL'][0]['DIFF']),
+                    "휘발유": (result_todayOilPrice['RESULT']['OIL'][1]['PRICE'], result_todayOilPrice['RESULT']['OIL'][1]['DIFF']),
+                    "경유": (result_todayOilPrice['RESULT']['OIL'][2]['PRICE'], result_todayOilPrice['RESULT']['OIL'][2]['DIFF'])}
 
-    localPrice = {}
+    def GetLocalOilPrice(self):
+        url_localOilPrice = f'http://www.opinet.co.kr/api/avgSidoPrice.do?code={OilAPIcode}&out=xml'
+        result_localOilPrice = xmltodict.parse(requests.get(url_localOilPrice).content)
 
-    for i, gas in enumerate(result_localOilPrice['RESULT']['OIL']):
-        if i % 5 == 0:
-            localPrice[gas['SIDONM']] = {}
-            localPrice[gas['SIDONM']]["휘발유"] = (gas['PRICE'], gas['DIFF'])
-        if i % 5 == 1:
-            localPrice[gas['SIDONM']]["고급 휘발유"] = (gas['PRICE'], gas['DIFF'])
-        if i % 5 == 3:
-            localPrice[gas['SIDONM']]["경유"] = (gas['PRICE'], gas['DIFF'])
-    for gas in localPrice:
-        print(gas + " : " ,localPrice[gas])
-    return localPrice
+        for i, gas in enumerate(result_localOilPrice['RESULT']['OIL']):
+            if i < 5: continue
 
-def GetCurrent7DaysPrice(): #현재 선택된 지역에 어제까지 최근 7일간 기름값
-    global oilName, localCode
+            if i % 5 == 0:
+                self.localPrice[gas['SIDONM']] = {}
+                self.localPrice[gas['SIDONM']]["휘발유"] = (gas['PRICE'], gas['DIFF'])
+            if i % 5 == 1:
+                self.localPrice[gas['SIDONM']]["고급 휘발유"] = (gas['PRICE'], gas['DIFF'])
+            if i % 5 == 3:
+                self.localPrice[gas['SIDONM']]["경유"] = (gas['PRICE'], gas['DIFF'])
 
-    if oilName == '경유':
-        oilCode = 'D047'
-    elif oilName == '휘발유':
-        oilCode = 'B027'
-    elif oilName == '고급휘발유':
-        oilCode = 'B034'
+    def GetCurrent7DaysPrice(self):  # 현재 선택된 지역에 어제까지 최근 7일간 기름값
+        if self.oilName == '경유':
+            oilCode = 'D047'
+        elif self.oilName == '휘발유':
+            oilCode = 'B027'
+        elif self.oilName == '고급휘발유':
+            oilCode = 'B034'
 
-    currentPrice = {}
+        url_currentOilPrice = \
+            f'http://www.opinet.co.kr/api/areaAvgRecentPrice.do?' \
+            f'code={OilAPIcode}&out=xml&area={self.localCode}&prodcd={oilCode}'
+        result_currentOilPrice = xmltodict.parse(requests.get(url_currentOilPrice).content)
 
-    url_currentOilPrice = \
-        f'http://www.opinet.co.kr/api/areaAvgRecentPrice.do?' \
-        f'code={OilAPIcode}&out=xml&area={localCode}&prodcd={oilCode}'
-    result_currentOilPrice = xmltodict.parse(requests.get(url_currentOilPrice).content)
-
-    for i, gas in enumerate(result_currentOilPrice['RESULT']['OIL']):
-        currentPrice[gas['DATE']] = gas['PRICE']
-
-    return currentPrice
+        for i, gas in enumerate(result_currentOilPrice['RESULT']['OIL']):
+            self.currentPrice[gas['DATE']] = gas['PRICE']
 
 
 
-oilName = "경유"
-localCode = "0116"
-
-FindCheapOilStation()
-GetLocalOilPrice()
-GetCurrent7DaysPrice()
+def addr_to_lat_lon(addr):  #주소를 위도 경도로 반환하는 함수
+    posUrl = 'https://dapi.kakao.com/v2/local/search/address.json?query={address}'.format(address=addr)
+    headers = {"Authorization": "KakaoAK " + kakaoAPIcode}
+    posResult = json.loads(str(requests.get(posUrl, headers=headers).text))
+    match_first = posResult['documents'][0]['address']
+    return float(match_first['x']), float(match_first['y'])
 
 sgcode = f"http://www.opinet.co.kr/api/areaCode.do?code={OilAPIcode}&out=xml&area=15"
-
 codeResult = xmltodict.parse(requests.get(sgcode).content)
-
-print(codeResult) #시도코드 발행
-for i in codeResult['RESULT']['OIL']:
+for i in codeResult['RESULT']['OIL']:   #시도코드
     print(i)
+
+oilAPI = OilAPI()
