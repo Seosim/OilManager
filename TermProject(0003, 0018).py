@@ -45,6 +45,8 @@ class Program:
         self.window.title("기름값 도우미")
         self.font = "Arial 25"
         self.mfont = "Arial 15"
+        self.favoriteList = []
+        self.selectedOilStation = None
 
 
         #서심코드 : 오늘 기름 가격 그래프 표시 테스트
@@ -59,6 +61,16 @@ class Program:
         self.n1oilName1.place(x=100, y= 130)
         self.n1oilPrice1 = tk.Label(self.frame1, text=str(OilData.oilAPI.todayOil["경유"][0]+ " / " + OilData.oilAPI.todayOil["경유"][1] ),font=self.mfont)
         self.n1oilPrice1.place(x=100, y= 200)
+
+        self.n1oilName2 = tk.Label(self.frame1, text="휘발유",font=self.mfont)
+        self.n1oilName2.place(x=300, y= 130)
+        self.n1oilPrice2 = tk.Label(self.frame1, text=str(OilData.oilAPI.todayOil["휘발유"][0]+ " / " + OilData.oilAPI.todayOil["휘발유"][1] ),font=self.mfont)
+        self.n1oilPrice2.place(x=300, y= 200)
+
+        self.n1oilName3 = tk.Label(self.frame1, text="고급휘발유",font=self.mfont)
+        self.n1oilName3.place(x=500, y= 130)
+        self.n1oilPrice3 = tk.Label(self.frame1, text=str(OilData.oilAPI.todayOil["고급휘발유"][0]+ " / " + OilData.oilAPI.todayOil["휘발유"][1] ),font=self.mfont)
+        self.n1oilPrice3.place(x=500, y= 200)
 
         self.frame2 = tk.Frame(self.window)
         self.notebook.add(self.frame2, text="TWO")
