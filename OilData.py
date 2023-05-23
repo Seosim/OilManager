@@ -79,6 +79,28 @@ def GetLocalOilPrice():
         print(gas + " : " ,localPrice[gas])
     return localPrice
 
+def GetCurrent7DaysPrice(): #현재 선택된 지역에 어제까지 최근 7일간 기름값
+    global oilName, localCode
+
+    if oilName == '경유':
+        oilCode = 'D047'
+    elif oilName == '휘발유':
+        oilCode = 'B027'
+    elif oilName == '고급휘발유':
+        oilCode = 'B034'
+
+    currentPrice = {}
+
+    url_currentOilPrice = \
+        f'http://www.opinet.co.kr/api/areaAvgRecentPrice.do?' \
+        f'code={OilAPIcode}&out=xml&area={localCode}&prodcd={oilCode}'
+    result_currentOilPrice = xmltodict.parse(requests.get(url_currentOilPrice).content)
+
+    for i, gas in enumerate(result_currentOilPrice['RESULT']['OIL']):
+        currentPrice[gas['DATE']] = gas['PRICE']
+
+    return currentPrice
+
 
 
 oilName = "경유"
@@ -86,6 +108,7 @@ localCode = "0116"
 
 FindCheapOilStation()
 GetLocalOilPrice()
+GetCurrent7DaysPrice()
 
 sgcode = f"http://www.opinet.co.kr/api/areaCode.do?code={OilAPIcode}&out=xml&area=15"
 
