@@ -70,37 +70,27 @@ def GetLocalOilPrice():
     for i, gas in enumerate(result_localOilPrice['RESULT']['OIL']):
         if i % 5 == 0:
             localPrice[gas['SIDONM']] = {}
-            localPrice[gas['SIDONM']]["휘발유"] = gas['PRICE']
+            localPrice[gas['SIDONM']]["휘발유"] = (gas['PRICE'], gas['DIFF'])
         if i % 5 == 1:
-            localPrice[gas['SIDONM']]["고급 휘발유"] = gas['PRICE']
+            localPrice[gas['SIDONM']]["고급 휘발유"] = (gas['PRICE'], gas['DIFF'])
         if i % 5 == 3:
-            localPrice[gas['SIDONM']]["경유"] = gas['PRICE']
-    print("asdfsfdhgfdgdfadghngfjhdsfg")
+            localPrice[gas['SIDONM']]["경유"] = (gas['PRICE'], gas['DIFF'])
     for gas in localPrice:
         print(gas + " : " ,localPrice[gas])
+    return localPrice
+
+
 
 oilName = "경유"
 localCode = "0116"
+
 FindCheapOilStation()
-GetTodayOilPrice()
 GetLocalOilPrice()
 
-
-
-
 sgcode = f"http://www.opinet.co.kr/api/areaCode.do?code={OilAPIcode}&out=xml&area=15"
-gOilURL = f"http://www.opinet.co.kr/api/avgAllPrice.do?code={OilAPIcode}&out=xml"
-myLocalOilPriceURL = f'http://www.opinet.co.kr/api/avgSigunPrice.do?code={OilAPIcode}&out=xml&sido=01&sigun=0116'
 
-#result = xmltodict.parse(requests.get(url).content)
 codeResult = xmltodict.parse(requests.get(sgcode).content)
-gOilResult = xmltodict.parse(requests.get(gOilURL).content)
-myLocalOilPriceResult = xmltodict.parse(requests.get(myLocalOilPriceURL).content)
 
 print(codeResult) #시도코드 발행
 for i in codeResult['RESULT']['OIL']:
     print(i)
-# print(result) #현재 설정지역 에서 최저값 주유소 10개 검색
-# print(gOilResult['RESULT']['OIL']) # 하루마다 전국 기름값 평균 데이터 정보
-# print(myLocalOilPriceResult) #설정지역 평균 기름값
-# print()
