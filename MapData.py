@@ -12,7 +12,7 @@ headers = {
     "X-NCP-APIGW-API-KEY": client_secret,
 }
 # 중심 좌표
-lon, lat = OilData.gasStationList[0].getPos()
+lon, lat = OilData.oilAPI.gasStationList[0].getPos()
 _center = f"{lon},{lat}"
 # 줌 레벨 - 0 ~ 20
 _level = 14
