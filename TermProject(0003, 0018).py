@@ -12,7 +12,7 @@ MapWidth = 300
 MapHeight = 300
 
 ChartWidth = Width
-ChartHeight = 400
+ChartHeight = 200
 
 gasstations = []
 gasstation = {
@@ -43,8 +43,8 @@ class Program:
     def __init__(self):
         self.window = tk.Tk()
         self.window.title("기름값 도우미")
-        self.font = "Arial 25"
-        self.mfont = "Arial 15"
+        self.font = "Arial 15"
+        self.mfont = "Arial 10"
         self.favoriteList = []
         self.selectedOilStation = None
 
@@ -55,26 +55,57 @@ class Program:
         self.notebook.add(self.frame1, text="ONE")
         self.notebook.pack()
 
+        # -------------------------------------- 전국 경유 막대그래프 ---------------------------------------------
+        Chart = tk.Canvas(self.frame1, width=ChartWidth, height=ChartHeight)
+        Chart.pack()
+
+        maxprice = 1.1
+        for i in OilData.oilAPI.localPrice:
+            if (float)(OilData.oilAPI.localPrice[i]['경유'][0]) > maxprice:
+                maxprice = (float)(OilData.oilAPI.localPrice[i]['경유'][0])
+
+        self.seoul = tk.Label(self.frame1, text=OilData.oilAPI.localPrice['서울']['경유'][0],font=self.mfont)
+        self.seoul.place(x=120, y= 50)
+        Chart.create_rectangle(120, ChartHeight - 150 * ((float)(OilData.oilAPI.localPrice['서울']['경유'][0]) / maxprice), 140, ChartHeight - 20, fill = 'black', tags='Chart')
+        print(ChartHeight - 80 * ((float)(OilData.oilAPI.localPrice['서울']['경유'][0]) / maxprice))
+        Chart.create_rectangle(100, ChartHeight - 20, ChartWidth - 100, ChartHeight - 10, fill = 'black', tags='Chart')
+        # -------------------------------------- 전국 경유 막대그래프 ---------------------------------------------
+
+         # -------------------------------------- 전국 휘발유 막대그래프 ---------------------------------------------
+        Chart = tk.Canvas(self.frame1, width=ChartWidth, height=ChartHeight)
+        Chart.pack()
+
+        Chart.create_rectangle(100, ChartHeight - 20, ChartWidth - 100, ChartHeight - 10, fill = 'black', tags='Chart')
+        # -------------------------------------- 전국 휘발유 막대그래프 ---------------------------------------------
+
+         # -------------------------------------- 전국 고급 휘발유 막대그래프 ---------------------------------------------
+        Chart = tk.Canvas(self.frame1, width=ChartWidth, height=ChartHeight)
+        Chart.pack()
+
+        Chart.create_rectangle(100, ChartHeight - 20, ChartWidth - 100, ChartHeight- 10, fill = 'black', tags='Chart')
+        # -------------------------------------- 전국 고급 휘발유 막대그래프 ---------------------------------------------
+
         self.n1Title = tk.Label(self.frame1, text="오늘의 기름값", font=self.font)
-        self.n1Title.place(x=0, y= 30)
+        self.n1Title.place(x=Width / 2 - 75, y= 0)
         self.n1oilName1 = tk.Label(self.frame1, text="경유",font=self.mfont)
-        self.n1oilName1.place(x=100, y= 130)
+        self.n1oilName1.place(x=40, y= 150)
         self.n1oilPrice1 = tk.Label(self.frame1, text=str(OilData.oilAPI.todayOil["경유"][0]+ " / " + OilData.oilAPI.todayOil["경유"][1] ),font=self.mfont)
-        self.n1oilPrice1.place(x=100, y= 200)
+        self.n1oilPrice1.place(x=10, y= 180)
 
         self.n1oilName2 = tk.Label(self.frame1, text="휘발유",font=self.mfont)
-        self.n1oilName2.place(x=300, y= 130)
+        self.n1oilName2.place(x=30, y= 350)
         self.n1oilPrice2 = tk.Label(self.frame1, text=str(OilData.oilAPI.todayOil["휘발유"][0]+ " / " + OilData.oilAPI.todayOil["휘발유"][1] ),font=self.mfont)
-        self.n1oilPrice2.place(x=300, y= 200)
+        self.n1oilPrice2.place(x=10, y= 380)
 
         self.n1oilName3 = tk.Label(self.frame1, text="고급휘발유",font=self.mfont)
-        self.n1oilName3.place(x=500, y= 130)
+        self.n1oilName3.place(x=20, y= 550)
         self.n1oilPrice3 = tk.Label(self.frame1, text=str(OilData.oilAPI.todayOil["고급휘발유"][0]+ " / " + OilData.oilAPI.todayOil["휘발유"][1] ),font=self.mfont)
-        self.n1oilPrice3.place(x=500, y= 200)
+        self.n1oilPrice3.place(x=10, y= 580)
 
         self.frame2 = tk.Frame(self.window)
         self.notebook.add(self.frame2, text="TWO")
         self.notebook.pack()
+
         #-----------------------------상단에 글씨 띄우는 캔버스--------------------------------         START
         MainCanvas = tk.Canvas(self.frame2, bg = 'white', width=Width, height=Height/20)
         MainCanvas.pack()

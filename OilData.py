@@ -109,6 +109,7 @@ def addr_to_lat_lon(addr):  #주소를 위도 경도로 반환하는 함수
 sgcode = f"http://www.opinet.co.kr/api/areaCode.do?code={OilAPIcode}&out=xml&area=15"
 codeResult = xmltodict.parse(requests.get(sgcode).content)
 for i in codeResult['RESULT']['OIL']:   #시도코드
-    print(i)
+    # print(i)
+    pass
 
 oilAPI = OilAPI()
