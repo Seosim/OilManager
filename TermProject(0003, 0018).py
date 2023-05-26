@@ -15,13 +15,15 @@ ChartWidth = Width
 ChartHeight = 300
 
 class Program:
-    def SetChart(self):
-        self.Chart = tk.Canvas(self.frame1, width=ChartWidth, height=ChartHeight)
-        self.Chart.place(y=Height - ChartHeight)
-
     def DrawChart(self, kind):     #  - 고인호
-        self.Chart.delete("Chart")
+        self.Chart = tk.Canvas(self.frame1, width=ChartWidth, height=ChartHeight)
+        self.Chart.place(y=Height - ChartHeight * 1.5)
+
         if kind == 'dissel':
+            self.n1oilName1 = tk.Label(self.Chart, text="경유",font=self.mfont)
+            self.n1oilName1.place(x=Width / 2 - 25, y= 0)
+            self.n1oilPrice1 = tk.Label(self.Chart, text=str(OilData.oilAPI.todayOil["경유"][0]+ " / " + OilData.oilAPI.todayOil["경유"][1] ),font=self.mfont)
+            self.n1oilPrice1.place(x=Width / 2 - 50, y= 30)
         # -------------------------------------- 전국 경유 막대그래프 ---------------------------------------------
             minprice = (float)(OilData.oilAPI.localPrice['서울']['경유'][0])
             minlocal = ''
@@ -30,7 +32,7 @@ class Program:
                     minprice = (float)(OilData.oilAPI.localPrice[i]['경유'][0])
                     minlocal = i
 
-            # self.seoul = tk.Label(self.frame1, text=OilData.oilAPI.localPrice['서울']['경유'][0],font=self.mfont)
+            # self.seoul = tk.Label(self.Chart, text=OilData.oilAPI.localPrice['서울']['경유'][0],font=self.mfont)
             # self.seoul.place(x=120, y= 50)
 
             count = 0
@@ -40,12 +42,14 @@ class Program:
                 else:
                     color = 'pale green'
                 self.Chart.create_rectangle(110 + 30 * count, ChartHeight - ((float)(OilData.oilAPI.localPrice[i]['경유'][0]) - minprice) - 100, 130 + 30 * count, ChartHeight - 20, fill = color, tags='Chart')        
-                tk.Label(self.Chart, text=i, font=self.mfont).place(x=105 + 30 * count, y= ChartHeight-20)  # , tags='Chart'
+                tk.Label(self.Chart, text=i, font=self.mfont).place(x=105 + 30 * count, y= ChartHeight-20)
                 count += 1
-
-            self.Chart.create_rectangle(50, ChartHeight - 40, ChartWidth - 50, ChartHeight - 20, fill = 'black', tags='Chart')
         # -------------------------------------- 전국 경유 막대그래프 ---------------------------------------------
         elif kind == 'gasoline':
+            self.n1oilName1 = tk.Label(self.Chart, text="휘발유",font=self.mfont)
+            self.n1oilName1.place(x=Width / 2 - 30, y= 0)
+            self.n1oilPrice1 = tk.Label(self.Chart, text=str(OilData.oilAPI.todayOil["휘발유"][0]+ " / " + OilData.oilAPI.todayOil["휘발유"][1] ),font=self.mfont)
+            self.n1oilPrice1.place(x=Width / 2 - 50, y= 30)
         # -------------------------------------- 전국 휘발유 막대그래프 ---------------------------------------------
             minprice = (float)(OilData.oilAPI.localPrice['서울']['휘발유'][0])
             minlocal = ''
@@ -53,9 +57,6 @@ class Program:
                 if (float)(OilData.oilAPI.localPrice[i]['휘발유'][0]) < minprice:
                     minprice = (float)(OilData.oilAPI.localPrice[i]['휘발유'][0])
                     minlocal = i
-
-            # self.seoul = tk.Label(self.frame1, text=OilData.oilAPI.localPrice['서울']['경유'][0],font=self.mfont)
-            # self.seoul.place(x=120, y= 50)
 
             count = 0
             for i in OilData.oilAPI.localPrice:
@@ -66,10 +67,12 @@ class Program:
                 self.Chart.create_rectangle(110 + 30 * count, ChartHeight - ((float)(OilData.oilAPI.localPrice[i]['휘발유'][0]) - minprice) - 100, 130 + 30 * count, ChartHeight - 20, fill = color, tags='Chart')        
                 tk.Label(self.Chart, text=i, font=self.mfont).place(x=105 + 30 * count, y= ChartHeight-20)  # , tags='Chart'
                 count += 1
-
-            self.Chart.create_rectangle(50, ChartHeight - 40, ChartWidth - 50, ChartHeight - 20, fill = 'black', tags='Chart')
         # -------------------------------------- 전국 휘발유 막대그래프 ---------------------------------------------
         elif kind == "premiumgasoline":
+            self.n1oilName1 = tk.Label(self.Chart, text="고급 휘발유",font=self.mfont)
+            self.n1oilName1.place(x=Width / 2 - 40, y= 0)
+            self.n1oilPrice1 = tk.Label(self.Chart, text=str(OilData.oilAPI.todayOil["고급휘발유"][0]+ " / " + OilData.oilAPI.todayOil["고급휘발유"][1] ),font=self.mfont)
+            self.n1oilPrice1.place(x=Width / 2 - 50, y= 30)
         # -------------------------------------- 전국 고급 휘발유 막대그래프 ---------------------------------------------
             minprice = (float)(OilData.oilAPI.localPrice['서울']['고급 휘발유'][0])
             minlocal = ''
@@ -77,10 +80,7 @@ class Program:
                 if (float)(OilData.oilAPI.localPrice[i]['고급 휘발유'][0]) < minprice:
                     minprice = (float)(OilData.oilAPI.localPrice[i]['고급 휘발유'][0])
                     minlocal = i
-
-            # self.seoul = tk.Label(self.frame1, text=OilData.oilAPI.localPrice['서울']['경유'][0],font=self.mfont)
-            # self.seoul.place(x=120, y= 50)
-
+                    
             count = 0
             for i in OilData.oilAPI.localPrice:
                 if i == minlocal:
@@ -90,9 +90,8 @@ class Program:
                 self.Chart.create_rectangle(110 + 30 * count, ChartHeight - ((float)(OilData.oilAPI.localPrice[i]['고급 휘발유'][0]) - minprice) - 100, 130 + 30 * count, ChartHeight - 20, fill = color, tags='Chart')        
                 tk.Label(self.Chart, text=i, font=self.mfont).place(x=105 + 30 * count, y= ChartHeight-20)  # , tags='Chart'
                 count += 1
-
-            self.Chart.create_rectangle(50, ChartHeight - 40, ChartWidth - 50, ChartHeight - 20, fill = 'black', tags='Chart')
-        # -------------------------------------- 전국 고급 휘발유 막대그래프 ---------------------------------------------        
+        # -------------------------------------- 전국 고급 휘발유 막대그래프 ---------------------------------------------      
+        self.Chart.create_rectangle(50, ChartHeight - 40, ChartWidth - 50, ChartHeight - 20, fill = 'black', tags='Chart')  
 
     def up(self):
         pass
@@ -125,26 +124,8 @@ class Program:
         self.premiumgasolinebutton.place(x=Width/2 + 10, y = 50)
         # 기름 선택 버튼    - 고인호
 
-        # 캔버스 set함수    - 고인호
-        self.SetChart()
-        # 캔버스 set함수    - 고인호
-
         self.n1Title = tk.Label(self.frame1, text="오늘의 기름값", font=self.font)
         self.n1Title.place(x=Width / 2 - 75, y= 0)
-        self.n1oilName1 = tk.Label(self.frame1, text="경유",font=self.mfont)
-        self.n1oilName1.place(x=40, y= 150)
-        self.n1oilPrice1 = tk.Label(self.frame1, text=str(OilData.oilAPI.todayOil["경유"][0]+ " / " + OilData.oilAPI.todayOil["경유"][1] ),font=self.mfont)
-        self.n1oilPrice1.place(x=10, y= 180)
-
-        # self.n1oilName2 = tk.Label(self.frame1, text="휘발유",font=self.mfont)
-        # self.n1oilName2.place(x=30, y= 350)
-        # self.n1oilPrice2 = tk.Label(self.frame1, text=str(OilData.oilAPI.todayOil["휘발유"][0]+ " / " + OilData.oilAPI.todayOil["휘발유"][1] ),font=self.mfont)
-        # self.n1oilPrice2.place(x=10, y= 380)
-
-        # self.n1oilName3 = tk.Label(self.frame1, text="고급휘발유",font=self.mfont)
-        # self.n1oilName3.place(x=20, y= 550)
-        # self.n1oilPrice3 = tk.Label(self.frame1, text=str(OilData.oilAPI.todayOil["고급휘발유"][0]+ " / " + OilData.oilAPI.todayOil["휘발유"][1] ),font=self.mfont)
-        # self.n1oilPrice3.place(x=10, y= 580)
 
         self.frame2 = tk.Frame(self.window)
         self.notebook.add(self.frame2, text="TWO")
@@ -161,7 +142,7 @@ class Program:
         frame1 = tk.Frame(self.frame2)
         frame1.pack(side=tk.TOP)
         #------------------------------지도를 그리는 캔버스-----------------------------------          START
-        photo = ImageTk.PhotoImage(MapData.map.GetImage(0))   #지도이미지
+        photo = ImageTk.PhotoImage(MapData.map.GetImage())   #지도이미지
         mapLabel = tk.Label(frame1, image=photo, width=MapWidth, height=MapHeight)
         mapLabel.pack(side=tk.RIGHT)
         #------------------------------지도를 그리는 캔버스-----------------------------------          END
