@@ -44,6 +44,8 @@ class OilAPI:
         self.GetLocalOilPrice()
         self.GetCurrent7DaysPrice()
 
+        self.saveOilStation = {}    #주유소 즐겨찾기 목록
+
     def FindCheapOilStation(self):  # gasStationList에 주유소 데이터를 담는 함수
         if self.oilName == '경유':
             oilCode = 'D047'
@@ -97,7 +99,12 @@ class OilAPI:
         for i, gas in enumerate(result_currentOilPrice['RESULT']['OIL']):
             self.currentPrice[gas['DATE']] = gas['PRICE']
 
+    def SaveOilStation(self, idx):  #주유소 즐겨찾기 함수
+        g = self.gasStationList[idx]
+        self.saveOilStation[g.name] = g
 
+    def RemoveOilStation(self, name):   #주유소 즐겨찾기 해제 함수
+        self.saveOilStation.pop(name)
 
 def addr_to_lat_lon(addr):  #주소를 위도 경도로 반환하는 함수
     posUrl = 'https://dapi.kakao.com/v2/local/search/address.json?query={address}'.format(address=addr)
