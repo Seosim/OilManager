@@ -34,14 +34,29 @@ class Map:
         # 서비스에서 사용할 데이터 버전 파라미터 전달 CDN 캐시 무효화
         self.dataversion = ""
 
+        self.idx = 0
+
         #이미지 데이터
         self.image = None
 
-    def GetImage(self, idx):
-        self.lon, self.lat = OilData.oilAPI.gasStationList[idx].getPos()
+    def SetIdx(self, idx):
+        self.idx = idx
+        self.lon, self.lat = OilData.oilAPI.gasStationList[self.idx].getPos()
         self.center = f"{self.lon},{self.lat}"
         self.markers = f"""type:d|size:mid|pos:{self.lon} {self.lat}|color:red"""
+        return self.GetImage()
 
+    def ZoomIn(self):   #지도 확대
+        self.level += 1
+        if self.level > 20: self.level = 0
+        return self.GetImage()
+
+    def ZoomOut(self):
+        self.level -= 1
+        if self.level < 0: self.level = 0
+        return self.GetImage()
+
+    def GetImage(self):
         # URL
         url = f"{self.endpoint}?center={self.center}&level={self.level}&w={self.w}&h={self.h}&maptype={self.maptype}&format={self.format}&scale={self.scale}&markers={self.markers}&lang={self.lang}&public_transit={self.public_transit}&dataversion={self.dataversion}"
         res = requests.get(url, headers=self.headers)
