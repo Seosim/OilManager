@@ -14,26 +14,6 @@ MapHeight = 300
 ChartWidth = Width
 ChartHeight = 200
 
-gasstations = []
-gasstation = {
-    "name": "sihmng",  # 주유소 이름
-    "address": "경기 시흥시",  # 주유소 주소
-    "lat": 0,  # 위도
-    "lng": 0,  # 경도
-    "gasoline": 1604,  # 휘발유값
-    "Diesel" : 1495 # 경유 값
-}
-gasstations.append(gasstation)
-# for item in items:
-#     gasstation = {
-#         "name": item.findtext("yadmNm"),  # 병원 이름
-#         "address": item.findtext("addr"),  # 병원 주소
-#         "lat": item.findtext("YPos"),  # 위도
-#         "lng": item.findtext("XPos"),  # 경도
-#         "doctors": item.findtext("drTotCnt"),  # 의사수
-#     }
-#     hospitals.append(hospital)
-
 class Program:
     def up(self):
         pass
@@ -55,35 +35,77 @@ class Program:
         self.notebook.add(self.frame1, text="ONE")
         self.notebook.pack()
 
+        # 기름 선택 버튼
+        tk.Radiobutton(self.frame1).pack(side=tk.TOP)
+
+        self.disselbutton = tk.Radiobutton(self.frame1, text='경유', command=self.up)
+        self.disselbutton.pack(side=tk.TOP)
+
+        self.gasolinebutton = tk.Radiobutton(self.frame1, text='휘발유', command=self.up)
+        self.gasolinebutton.pack(side=tk.TOP)
+
+        self.premiumgasolinebutton = tk.Radiobutton(self.frame1, text='고급 휘발유', command=self.up)
+        self.premiumgasolinebutton.pack(side=tk.TOP)
+        # 기름 선택 버튼
+
         # -------------------------------------- 전국 경유 막대그래프 ---------------------------------------------
         Chart = tk.Canvas(self.frame1, width=ChartWidth, height=ChartHeight)
         Chart.pack()
 
-        maxprice = 1.1
+        maxprice = 0
         for i in OilData.oilAPI.localPrice:
             if (float)(OilData.oilAPI.localPrice[i]['경유'][0]) > maxprice:
                 maxprice = (float)(OilData.oilAPI.localPrice[i]['경유'][0])
 
-        self.seoul = tk.Label(self.frame1, text=OilData.oilAPI.localPrice['서울']['경유'][0],font=self.mfont)
-        self.seoul.place(x=120, y= 50)
-        Chart.create_rectangle(120, ChartHeight - 150 * ((float)(OilData.oilAPI.localPrice['서울']['경유'][0]) / maxprice), 140, ChartHeight - 20, fill = 'black', tags='Chart')
-        print(ChartHeight - 80 * ((float)(OilData.oilAPI.localPrice['서울']['경유'][0]) / maxprice))
-        Chart.create_rectangle(100, ChartHeight - 20, ChartWidth - 100, ChartHeight - 10, fill = 'black', tags='Chart')
+        # self.seoul = tk.Label(self.frame1, text=OilData.oilAPI.localPrice['서울']['경유'][0],font=self.mfont)
+        # self.seoul.place(x=120, y= 50)
+
+        count = 0
+        for i in OilData.oilAPI.localPrice:
+            Chart.create_rectangle(110 + 30 * count, Height - 150 * ((float)(OilData.oilAPI.localPrice[i]['경유'][0]) / maxprice), 130 + 30 * count, Height - 20, fill = 'black', tags='Chart')        
+            # print(ChartHeight - 150 * ((float)(OilData.oilAPI.localPrice[i]['경유'][0]) / maxprice))
+            tk.Label(self.frame1, text=i, font=self.mfont).place(x=105 + 30 * count, y= Height-20)
+            count += 1
+
+        Chart.create_rectangle(50, Height - 40, ChartWidth - 50, Height - 20, fill = 'black', tags='Chart')
         # -------------------------------------- 전국 경유 막대그래프 ---------------------------------------------
 
-         # -------------------------------------- 전국 휘발유 막대그래프 ---------------------------------------------
-        Chart = tk.Canvas(self.frame1, width=ChartWidth, height=ChartHeight)
-        Chart.pack()
+        #  # -------------------------------------- 전국 휘발유 막대그래프 ---------------------------------------------
+        # Chart = tk.Canvas(self.frame1, width=ChartWidth, height=ChartHeight)
+        # Chart.pack()
 
-        Chart.create_rectangle(100, ChartHeight - 20, ChartWidth - 100, ChartHeight - 10, fill = 'black', tags='Chart')
-        # -------------------------------------- 전국 휘발유 막대그래프 ---------------------------------------------
+        # maxprice = 0
+        # for i in OilData.oilAPI.localPrice:
+        #     if (float)(OilData.oilAPI.localPrice[i]['휘발유'][0]) > maxprice:
+        #         maxprice = (float)(OilData.oilAPI.localPrice[i]['휘발유'][0])
 
-         # -------------------------------------- 전국 고급 휘발유 막대그래프 ---------------------------------------------
-        Chart = tk.Canvas(self.frame1, width=ChartWidth, height=ChartHeight)
-        Chart.pack()
+        # count = 0
+        # for i in OilData.oilAPI.localPrice:
+        #     Chart.create_rectangle(110 + 30 * count, ChartHeight - 150 * ((float)(OilData.oilAPI.localPrice[i]['휘발유'][0]) / maxprice), 130 + 30 * count, ChartHeight - 20, fill = 'black', tags='Chart')        
+            
+        #     # print(ChartHeight - 150 * ((float)(OilData.oilAPI.localPrice[i]['휘발유'][0]) / maxprice))
+        #     count += 1
 
-        Chart.create_rectangle(100, ChartHeight - 20, ChartWidth - 100, ChartHeight- 10, fill = 'black', tags='Chart')
-        # -------------------------------------- 전국 고급 휘발유 막대그래프 ---------------------------------------------
+        # Chart.create_rectangle(100, ChartHeight - 20, ChartWidth - 100, ChartHeight - 10, fill = 'black', tags='Chart')
+        # # -------------------------------------- 전국 휘발유 막대그래프 ---------------------------------------------
+
+        #  # -------------------------------------- 전국 고급 휘발유 막대그래프 ---------------------------------------------
+        # Chart = tk.Canvas(self.frame1, width=ChartWidth, height=ChartHeight)
+        # Chart.pack()
+
+        # maxprice = 0
+        # for i in OilData.oilAPI.localPrice:
+        #     if (float)(OilData.oilAPI.localPrice[i]['고급 휘발유'][0]) > maxprice:
+        #         maxprice = (float)(OilData.oilAPI.localPrice[i]['고급 휘발유'][0])
+
+        # count = 0
+        # for i in OilData.oilAPI.localPrice:
+        #     Chart.create_rectangle(110 + 30 * count, ChartHeight - 150 * ((float)(OilData.oilAPI.localPrice[i]['고급 휘발유'][0]) / maxprice), 130 + 30 * count, ChartHeight - 20, fill = 'black', tags='Chart')        
+        #     # print(ChartHeight - 150 * ((float)(OilData.oilAPI.localPrice[i]['고급 휘발유'][0]) / maxprice))
+        #     count += 1
+
+        # Chart.create_rectangle(100, ChartHeight - 20, ChartWidth - 100, ChartHeight- 10, fill = 'black', tags='Chart')
+        # # -------------------------------------- 전국 고급 휘발유 막대그래프 ---------------------------------------------
 
         self.n1Title = tk.Label(self.frame1, text="오늘의 기름값", font=self.font)
         self.n1Title.place(x=Width / 2 - 75, y= 0)
@@ -92,15 +114,15 @@ class Program:
         self.n1oilPrice1 = tk.Label(self.frame1, text=str(OilData.oilAPI.todayOil["경유"][0]+ " / " + OilData.oilAPI.todayOil["경유"][1] ),font=self.mfont)
         self.n1oilPrice1.place(x=10, y= 180)
 
-        self.n1oilName2 = tk.Label(self.frame1, text="휘발유",font=self.mfont)
-        self.n1oilName2.place(x=30, y= 350)
-        self.n1oilPrice2 = tk.Label(self.frame1, text=str(OilData.oilAPI.todayOil["휘발유"][0]+ " / " + OilData.oilAPI.todayOil["휘발유"][1] ),font=self.mfont)
-        self.n1oilPrice2.place(x=10, y= 380)
+        # self.n1oilName2 = tk.Label(self.frame1, text="휘발유",font=self.mfont)
+        # self.n1oilName2.place(x=30, y= 350)
+        # self.n1oilPrice2 = tk.Label(self.frame1, text=str(OilData.oilAPI.todayOil["휘발유"][0]+ " / " + OilData.oilAPI.todayOil["휘발유"][1] ),font=self.mfont)
+        # self.n1oilPrice2.place(x=10, y= 380)
 
-        self.n1oilName3 = tk.Label(self.frame1, text="고급휘발유",font=self.mfont)
-        self.n1oilName3.place(x=20, y= 550)
-        self.n1oilPrice3 = tk.Label(self.frame1, text=str(OilData.oilAPI.todayOil["고급휘발유"][0]+ " / " + OilData.oilAPI.todayOil["휘발유"][1] ),font=self.mfont)
-        self.n1oilPrice3.place(x=10, y= 580)
+        # self.n1oilName3 = tk.Label(self.frame1, text="고급휘발유",font=self.mfont)
+        # self.n1oilName3.place(x=20, y= 550)
+        # self.n1oilPrice3 = tk.Label(self.frame1, text=str(OilData.oilAPI.todayOil["고급휘발유"][0]+ " / " + OilData.oilAPI.todayOil["휘발유"][1] ),font=self.mfont)
+        # self.n1oilPrice3.place(x=10, y= 580)
 
         self.frame2 = tk.Frame(self.window)
         self.notebook.add(self.frame2, text="TWO")
