@@ -5,9 +5,6 @@ import json
 
 from KeyData import *
 
-oilName = "경유"
-localCode = "0116"
-
 class GasStation:
     def __init__(self, name, roadName, price, id):
         self.name = name
@@ -35,16 +32,30 @@ class OilAPI:
         self.oilName = "경유"
 
         self.gasStationList = []
+        self.localCodeList = dict() #지역코드저장 (사용방법 self.localCodeList['서울'] = '01' 반환해줌)
         self.todayOil = dict()
         self.localPrice = dict()
         self.currentPrice = dict()
 
+        self.GetLocalCode()
         self.FindCheapOilStation()
         self.GetTodayOilPrice()
         self.GetLocalOilPrice()
         self.GetCurrent7DaysPrice()
 
         self.saveOilStation = {}    #주유소 즐겨찾기 목록
+
+    def SetOilName(self, name):
+        self.oilName = name
+
+    def SetLocalCode(self, code):
+        self.localCode = code
+
+    def GetLocalCode(self):
+        sgcode = f"http://www.opinet.co.kr/api/areaCode.do?code={OilAPIcode}&out=xml&area=00"
+        codeResult = xmltodict.parse(requests.get(sgcode).content)
+        for ln in codeResult['RESULT']['OIL']:  # 시도코드
+            self.localCodeList[ln['AREA_NM']] = ln['AREA_CD']
 
     def FindCheapOilStation(self):  # gasStationList에 주유소 데이터를 담는 함수
         if self.oilName == '경유':
@@ -112,10 +123,5 @@ def addr_to_lat_lon(addr):  #주소를 위도 경도로 반환하는 함수
     posResult = json.loads(str(requests.get(posUrl, headers=headers).text))
     match_first = posResult['documents'][0]['address']
     return float(match_first['x']), float(match_first['y'])
-
-sgcode = f"http://www.opinet.co.kr/api/areaCode.do?code={OilAPIcode}&out=xml&area=15"
-codeResult = xmltodict.parse(requests.get(sgcode).content)
-for i in codeResult['RESULT']['OIL']:   #시도코드
-    print(i)
 
 oilAPI = OilAPI()
