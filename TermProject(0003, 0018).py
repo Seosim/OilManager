@@ -136,36 +136,30 @@ class Program:
         self.notebook.add(self.frame2, text="TWO")
         self.notebook.pack()
 
-        # 상단에 글씨 띄우는 캔버스    - 고인호
-        MainCanvas = tk.Canvas(self.frame2, bg = 'white', width=Width, height=Height/20)
-        MainCanvas.pack()
-        MainCanvas.create_text(Width / 2, Height / 40, text = '지역 주유소 최저가 검색')
-
-
-        # 기름 종류, 지도 그리는 프레임    - 고인호
-        frame1 = tk.Frame(self.frame2)
-        frame1.pack(side=tk.TOP)
+        # 상단에 글씨    - 고인호
+        MainName = tk.Label(self.frame2, text='지역 주유소 최저가 검색', font=self.font)
+        MainName.place(x=Width/4, y=10)
 
         # 지도를 그리는 캔버스    - 고인호
         photo = ImageTk.PhotoImage(MapData.map.GetImage())   #지도이미지
-        mapLabel = tk.Label(frame1, image=photo, width=MapWidth, height=MapHeight)
+        mapLabel = tk.Label(self.frame2, image=photo, width=MapWidth, height=MapHeight)
         mapLabel.pack(side=tk.RIGHT)
 
         # 지역 선택하는 콤보박스    - 고인호
-        # selected_gu = tk.StringVar()
-        # selected_gu.set("시흥시")  # 초기값 설정
-        # gu_options = set([gasstations['address'].split()[1] for hospital in hospitals])
-        # gu_combo = ttk.Combobox(root, textvariable=selected_gu, values=list(gu_options))
-        # gu_combo.pack()
+        selected_gu = tk.StringVar()
+        selected_gu.set("서울시")  # 초기값 설정
+        gu_options = set([i for i in OilData.oilAPI.localCodeList])
+        gu_combo = tkinter.ttk.Combobox(self.frame2, textvariable=selected_gu, values=list(gu_options))
+        gu_combo.place(x = 50, y = 200)
 
         # 기름 종류 선택    - 고인호
         # 체크 박스
-        tk.Checkbutton(frame1, text='경유', command=self.up).pack(side=tk.TOP)
-        tk.Checkbutton(frame1, text='휘발유', command=self.up).pack(side=tk.TOP)
-        tk.Checkbutton(frame1, text='고급 휘발유', command=self.up).pack(side=tk.TOP)
-        tk.Checkbutton(frame1, text='가솔린', command=self.up).pack(side=tk.TOP)
+        tk.Checkbutton(self.frame2, text='경유', command=self.up).pack(side=tk.TOP)
+        tk.Checkbutton(self.frame2, text='휘발유', command=self.up).pack(side=tk.TOP)
+        tk.Checkbutton(self.frame2, text='고급 휘발유', command=self.up).pack(side=tk.TOP)
+        tk.Checkbutton(self.frame2, text='가솔린', command=self.up).pack(side=tk.TOP)
         # 버튼
-        tk.Button(frame1, text="검색", command=self.search).pack(side=tk.TOP)
+        tk.Button(self.frame2, text="검색", command=self.search).pack(side=tk.TOP)
 
         # 기름값 도표 그리는 캔버스    - 고인호
         Chart = tk.Canvas(self.frame2, width=ChartWidth, height=ChartHeight)
