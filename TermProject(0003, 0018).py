@@ -1,5 +1,6 @@
 import tkinter as tk
 import tkinter.ttk
+import tkinter.font
 from PIL import ImageTk
 
 import MapData
@@ -104,9 +105,9 @@ class Program:
     def __init__(self):
         self.window = tk.Tk()
         self.window.title("기름값 도우미")
-        self.font = "Arial 15"
-        self.mfont = "Arial 10"
-        self.chartfont = "Arial 6"
+        self.font = tkinter.font.Font(family="문체부 제목 바탕체", size=25, weight='bold')
+        self.mfont = tkinter.font.Font(family="Arial", size=10)
+        self.chartfont = tkinter.font.Font(family="Arial", size=6)
         self.favoriteList = []
         self.selectedOilStation = None
 
@@ -128,7 +129,7 @@ class Program:
 
         # Title
         self.n1Title = tk.Label(self.frame1, text="오늘의 기름값", font=self.font)
-        self.n1Title.place(x=Width / 2 - 75, y= 0)
+        self.n1Title.place(x=Width / 2 - 110, y= 0)
 
         # 지도 나오는 프레임
         self.frame2 = tk.Frame(self.window)
