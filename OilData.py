@@ -23,6 +23,13 @@ class GasStation:
         print("주유소ID : " + self.id)
         print("위도/경도 : " + self.x + ' / ' + self.y)
 
+    def getInfo(self):
+        info = "주유소 이름 : " + self.name + '\n'
+        info += "도로명 주소 : " + self.roadName + '\n'
+        info += "가격 : " + self.price
+        return info
+
+
     def getPos(self):
         return self.x, self.y
 
@@ -56,7 +63,6 @@ class OilAPI:
         sgcode = f"http://www.opinet.co.kr/api/areaCode.do?code={OilAPIcode}&out=xml&area=00"
         codeResult = xmltodict.parse(requests.get(sgcode).content)
         for ln in codeResult['RESULT']['OIL']:  # 시도코드
-            print(ln)
             self.localCodeList[ln['AREA_NM']] = ln['AREA_CD']
 
         for i in range(1,19):
@@ -130,6 +136,9 @@ class OilAPI:
 
     def RemoveOilStation(self, name):   #주유소 즐겨찾기 해제 함수
         self.saveOilStation.pop(name)
+
+    def GetStationInfo(self, idx):
+        return self.gasStationList[idx].getInfo()
 
 def addr_to_lat_lon(addr):  #주소를 위도 경도로 반환하는 함수
     posUrl = 'https://dapi.kakao.com/v2/local/search/address.json?query={address}'.format(address=addr)
