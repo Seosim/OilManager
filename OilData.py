@@ -33,6 +33,7 @@ class OilAPI:
 
         self.gasStationList = []
         self.localCodeList = dict() #지역코드저장 (사용방법 self.localCodeList['서울'] = '01' 반환해줌)
+        self.GuCodeList = dict()    #구 기준 지역코드 (사용방법 self.GuCodeList[self.localCodeList['서울']] 입력시 해당 지역 구 코드 알려줌)
         self.todayOil = dict()
         self.localPrice = dict()
         self.currentPrice = dict()
@@ -55,7 +56,19 @@ class OilAPI:
         sgcode = f"http://www.opinet.co.kr/api/areaCode.do?code={OilAPIcode}&out=xml&area=00"
         codeResult = xmltodict.parse(requests.get(sgcode).content)
         for ln in codeResult['RESULT']['OIL']:  # 시도코드
+            print(ln)
             self.localCodeList[ln['AREA_NM']] = ln['AREA_CD']
+
+        for i in range(1,19):
+            if i == 12 or i == 13: continue
+            num = ""
+            if i < 10: num += '0'+str(i)
+            else: num =str(i)
+            gucode = f"http://www.opinet.co.kr/api/areaCode.do?code={OilAPIcode}&out=xml&area={num}"
+            gucodeResult = xmltodict.parse(requests.get(gucode).content)
+            self.GuCodeList[num] = {}
+            for ln in gucodeResult['RESULT']['OIL']:  # 시도코드
+                self.GuCodeList[num][ln['AREA_NM']] = ln['AREA_CD']
 
     def FindCheapOilStation(self):  # gasStationList에 주유소 데이터를 담는 함수
         self.gasStationList.clear()
