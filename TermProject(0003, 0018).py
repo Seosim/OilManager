@@ -111,11 +111,17 @@ class Program:
         self.favoriteList = []
         self.selectedOilStation = None
 
+
         # 오늘 기름 가격 그래프 표시 테스트 - 서종배
         self.notebook = tkinter.ttk.Notebook(self.window, width=Width, height=Height)
         self.frame1 = tk.Frame(self.window)
         self.notebook.add(self.frame1, text="ONE")
         self.notebook.pack()
+
+        #배경추가
+        bgImage= tk.PhotoImage(file="GasManagerBG.png")
+        self.bg = tk.Label(self.frame1, image=bgImage)
+        self.bg.pack()
 
         # 기름 선택 버튼    - 고인호
         self.disselbutton = tk.Button(self.frame1, text='경유', command=lambda row="dissel": self.DrawChart(row))
@@ -152,14 +158,18 @@ class Program:
         gu_combo = tkinter.ttk.Combobox(self.frame2, textvariable=selected_gu, values=list(gu_options))
         gu_combo.place(x = 50, y = 200)
 
+        testimg = tk.PhotoImage(file='SearchButton.png')
+        PGimage = tk.PhotoImage(file='PreGasoline.png')
+        DSimage = tk.PhotoImage(file='Diesel.png')
+        GSimage = tk.PhotoImage(file='Gasoline.png')
+
         # 기름 종류 선택    - 고인호
         # 체크 박스
-        tk.Checkbutton(self.frame2, text='경유', command=self.up).pack(side=tk.TOP)
-        tk.Checkbutton(self.frame2, text='휘발유', command=self.up).pack(side=tk.TOP)
-        tk.Checkbutton(self.frame2, text='고급 휘발유', command=self.up).pack(side=tk.TOP)
-        tk.Checkbutton(self.frame2, text='가솔린', command=self.up).pack(side=tk.TOP)
+        tk.Checkbutton(self.frame2, text='경유', command=self.up,image=DSimage).pack(side=tk.TOP)
+        tk.Checkbutton(self.frame2, text='휘발유', command=self.up, image=GSimage).pack(side=tk.TOP)
+        tk.Checkbutton(self.frame2, text='고급 휘발유', command=self.up, image=PGimage).pack(side=tk.TOP)
         # 버튼
-        tk.Button(self.frame2, text="검색", command=self.search).pack(side=tk.TOP)
+        tk.Button(self.frame2, text="검색", command=self.search,image=testimg).pack(side=tk.TOP)
 
         # 기름값 도표 그리는 캔버스    - 고인호
         Chart = tk.Canvas(self.frame2, width=ChartWidth, height=ChartHeight)
