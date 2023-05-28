@@ -100,7 +100,13 @@ class Program:
     def up(self):
         pass
     def search(self):
-        pass
+        OilData.oilAPI.SetLocalCode(OilData.oilAPI.localCodeList[self.selected_gu.get()])
+        OilData.oilAPI.FindCheapOilStation()
+        global photo1
+        photo1 = ImageTk.PhotoImage(MapData.map.SetIdx(0))   #지도이미지
+        self.mapLabel.config(image=photo1)
+        self.mapLabel['image'] = photo1
+        self.mapLabel.place(x=Width // 2, y=200)
 
     def __init__(self):
         self.window = tk.Tk()
@@ -111,6 +117,13 @@ class Program:
         self.favoriteList = []
         self.selectedOilStation = None
 
+        #이미지 생성 - 서종배
+        SearchImage = tk.PhotoImage(file='./image/SearchButton.png')
+        PGimage = tk.PhotoImage(file='./image/PreGasoline.png')
+        DSimage = tk.PhotoImage(file='./image/Diesel.png')
+        GSimage = tk.PhotoImage(file='./image/Gasoline.png')
+        bgImage= tk.PhotoImage(file="./image/GasManagerBG.png")
+
 
         # 오늘 기름 가격 그래프 표시 테스트 - 서종배
         self.notebook = tkinter.ttk.Notebook(self.window, width=Width, height=Height)
@@ -119,19 +132,19 @@ class Program:
         self.notebook.pack()
 
         #배경추가
-        bgImage= tk.PhotoImage(file="GasManagerBG.png")
-        self.bg = tk.Label(self.frame1, image=bgImage)
-        self.bg.pack()
+        self.bg1 = tk.Label(self.frame1, image=bgImage)
+        self.bg1.pack()
+
 
         # 기름 선택 버튼    - 고인호
-        self.disselbutton = tk.Button(self.frame1, text='경유', command=lambda row="dissel": self.DrawChart(row))
-        self.disselbutton.place(x=Width/2 - 100, y=50)
+        self.disselbutton = tk.Button(self.frame1, text='경유', command=lambda row="dissel": self.DrawChart(row), image=DSimage,borderwidth=0 )
+        self.disselbutton.place(x=Width/2 - 150, y=50)
 
-        self.gasolinebutton = tk.Button(self.frame1, text='휘발유', command=lambda row="gasoline": self.DrawChart(row))
+        self.gasolinebutton = tk.Button(self.frame1, text='휘발유', command=lambda row="gasoline": self.DrawChart(row), image=GSimage,borderwidth=0)
         self.gasolinebutton.place(x=Width/2 - 50, y = 50)
 
-        self.premiumgasolinebutton = tk.Button(self.frame1, text='고급 휘발유', command=lambda row="premiumgasoline": self.DrawChart(row))
-        self.premiumgasolinebutton.place(x=Width/2 + 10, y = 50)
+        self.premiumgasolinebutton = tk.Button(self.frame1, text='고급 휘발유', command=lambda row="premiumgasoline": self.DrawChart(row), image=PGimage,borderwidth=0)
+        self.premiumgasolinebutton.place(x=Width/2 + 50, y = 50)
 
         # Title
         self.n1Title = tk.Label(self.frame1, text="오늘의 기름값", font=self.font)
@@ -142,26 +155,25 @@ class Program:
         self.notebook.add(self.frame2, text="TWO")
         self.notebook.pack()
 
+        self.bg2 = tk.Label(self.frame2, image=bgImage)
+        self.bg2.pack()
+
         # 상단에 글씨    - 고인호
         MainName = tk.Label(self.frame2, text='지역 주유소 최저가 검색', font=self.font)
         MainName.place(x=Width/4, y=10)
 
         # 지도를 그리는 캔버스    - 고인호
         photo = ImageTk.PhotoImage(MapData.map.GetImage())   #지도이미지
-        mapLabel = tk.Label(self.frame2, image=photo, width=MapWidth, height=MapHeight)
-        mapLabel.pack(side=tk.RIGHT)
+        self.mapLabel = tk.Label(self.frame2, image=photo, width=MapWidth, height=MapHeight)
+        self.mapLabel.place(x=Width//2, y=200)
 
         # 지역 선택하는 콤보박스    - 고인호
-        selected_gu = tk.StringVar()
-        selected_gu.set("서울시")  # 초기값 설정
+        self.selected_gu = tk.StringVar()
+        self.selected_gu.set("서울")  # 초기값 설정
         gu_options = set([i for i in OilData.oilAPI.localCodeList])
-        gu_combo = tkinter.ttk.Combobox(self.frame2, textvariable=selected_gu, values=list(gu_options))
-        gu_combo.place(x = 50, y = 200)
+        gu_combo = tkinter.ttk.Combobox(self.frame2, textvariable=self.selected_gu, values=list(gu_options))
+        gu_combo.place(x = 50, y =Height - 100)
 
-        testimg = tk.PhotoImage(file='SearchButton.png')
-        PGimage = tk.PhotoImage(file='PreGasoline.png')
-        DSimage = tk.PhotoImage(file='Diesel.png')
-        GSimage = tk.PhotoImage(file='Gasoline.png')
 
         # 기름 종류 선택    - 고인호
         # 체크 박스
@@ -169,7 +181,8 @@ class Program:
         tk.Checkbutton(self.frame2, text='휘발유', command=self.up, image=GSimage).pack(side=tk.TOP)
         tk.Checkbutton(self.frame2, text='고급 휘발유', command=self.up, image=PGimage).pack(side=tk.TOP)
         # 버튼
-        tk.Button(self.frame2, text="검색", command=self.search,image=testimg).pack(side=tk.TOP)
+        tk.Button(self.frame2, text="검색", command=self.search, image=SearchImage, borderwidth=0).place(x=50,y=Height - 70)
+        #tk.Button(self.frame2, text="검색", command=self.search,image=testimg,borderwidth=0).pack(side=tk.TOP)
 
         # 기름값 도표 그리는 캔버스    - 고인호
         Chart = tk.Canvas(self.frame2, width=ChartWidth, height=ChartHeight)

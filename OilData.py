@@ -58,6 +58,7 @@ class OilAPI:
             self.localCodeList[ln['AREA_NM']] = ln['AREA_CD']
 
     def FindCheapOilStation(self):  # gasStationList에 주유소 데이터를 담는 함수
+        self.gasStationList.clear()
         if self.oilName == '경유':
             oilCode = 'D047'
         elif self.oilName == '휘발유':
