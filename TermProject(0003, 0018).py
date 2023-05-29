@@ -162,8 +162,8 @@ class Program:
         self.bg2.pack()
 
         # 상단에 글씨    - 고인호
-        MainName = tk.Label(self.frame2, text='지역 주유소 최저가 검색', font=self.font)
-        MainName.place(x=Width/4, y=10)
+        MainName = tk.Label(self.frame2, text='지역 주유소 최저가 검색', font=self.font, bg=self.skycolor)
+        MainName.place(x=Width/4, y=0)
 
         # 지도를 그리는 캔버스    - 고인호
         photo = ImageTk.PhotoImage(MapData.map.GetImage())   #지도이미지
@@ -180,9 +180,9 @@ class Program:
 
         # 기름 종류 선택    - 고인호
         # 체크 박스
-        tk.Checkbutton(self.frame2, text='경유', command=self.up,image=DSimage).pack(side=tk.TOP)
-        tk.Checkbutton(self.frame2, text='휘발유', command=self.up, image=GSimage).pack(side=tk.TOP)
-        tk.Checkbutton(self.frame2, text='고급 휘발유', command=self.up, image=PGimage).pack(side=tk.TOP)
+        tk.Checkbutton(self.frame2, text='경유', command=self.up,image=DSimage).place(x=50, y=300)
+        tk.Checkbutton(self.frame2, text='휘발유', command=self.up, image=GSimage).place(x=50, y=350)
+        tk.Checkbutton(self.frame2, text='고급 휘발유', command=self.up, image=PGimage).place(x=50, y=400)
         # 버튼
         tk.Button(self.frame2, text="검색", command=self.search, image=SearchImage, borderwidth=0, bg=self.groundcolor).place(x=50,y=Height - 70)
 
