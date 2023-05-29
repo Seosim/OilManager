@@ -129,11 +129,15 @@ class Program:
         self.Chart.create_rectangle(50, Chart2Height - 40, ChartWidth - 50, Chart2Height - 20, fill = 'black', tags='Chart')
         # -------------------------------------- 지역 막대그래프 ---------------------------------------------
     
+    def select_si(self):
+        print(self.selected_si.get())
+        self.gu_options = set([i for i in OilData.oilAPI.GuCodeList[OilData.oilAPI.localCodeList[self.selected_si.get()]]])
+        self.gu_options = tkinter.ttk.Combobox(self.frame2, textvariable=self.selected_gu, values=list(self.gu_options))
+        self.gu_options.place(x = 50, y =Height - 125)
 
-    def up(self):
-        pass
     def search(self):
-        OilData.oilAPI.SetLocalCode(OilData.oilAPI.localCodeList[self.selected_gu.get()])
+        # OilData.oilAPI.SetLocalCode(OilData.oilAPI.localCodeList[self.selected_si.get()])
+        OilData.oilAPI.SetLocalCode(OilData.oilAPI.GuCodeList[OilData.oilAPI.localCodeList[self.selected_si.get()]][self.selected_gu.get()])
         OilData.oilAPI.SetOilName(self.selected_oil.get())
         OilData.oilAPI.FindCheapOilStation()
         global photo1
@@ -207,21 +211,26 @@ class Program:
         self.mapLabel.place(x=Width//2, y=Height -MapHeight - 100)
 
         # 지역 선택하는 콤보박스    - 고인호
-        self.selected_gu = tk.StringVar()
-        self.selected_gu.set("서울")  # 초기값 설정
-        gu_options = set([i for i in OilData.oilAPI.localCodeList])
-        gu_combo = tkinter.ttk.Combobox(self.frame2, textvariable=self.selected_gu, values=list(gu_options))
-        gu_combo.place(x = 50, y =Height - 100)
+        self.selected_si = tk.StringVar()
+        self.selected_si.set("서울")  # 초기값 설정
+        self.si_options = set([i for i in OilData.oilAPI.localCodeList])
+        self.si_combo = tkinter.ttk.Combobox(self.frame2, textvariable=self.selected_si, values=list(self.si_options))
+        self.si_combo.place(x = 50, y =Height - 100)
 
+        self.selected_gu = tk.StringVar()
+        self.selected_gu.set("")  # 초기값 설정
+        self.gu_options = set([i for i in OilData.oilAPI.GuCodeList[OilData.oilAPI.localCodeList[self.selected_si.get()]]])
+        self.gu_options = tkinter.ttk.Combobox(self.frame2, textvariable=self.selected_gu, values=list(self.gu_options), postcommand=self.select_si)
+        self.gu_options.place(x = 50, y =Height - 125)
 
         # 기름 종류 선택    - 고인호
         self.oilkind = ["경유", "휘발유", "고급휘발유"]
 
         self.selected_oil = tk.StringVar()
         self.selected_oil.set("경유")  # 초기값 설정
-        oil_options = set([i for i in self.oilkind])
-        gu_combo = tkinter.ttk.Combobox(self.frame2, textvariable=self.selected_oil, values=list(oil_options))
-        gu_combo.place(x = 50, y =Height - 150)
+        self.oil_options = set([i for i in self.oilkind])
+        self.oil_combo = tkinter.ttk.Combobox(self.frame2, textvariable=self.selected_oil, values=list(self.oil_options))
+        self.oil_combo.place(x = 50, y =Height - 200)
         # 체크 박스
         # tk.Checkbutton(self.frame2, text='경유', command=self.up,image=DSimage).place(x=50, y=300)
         # tk.Checkbutton(self.frame2, text='휘발유', command=self.up, image=GSimage).place(x=50, y=350)
