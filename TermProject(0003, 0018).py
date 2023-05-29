@@ -128,7 +128,12 @@ class Program:
             count += 1
         self.Chart.create_rectangle(50, Chart2Height - 40, ChartWidth - 50, Chart2Height - 20, fill = 'black', tags='Chart')
         # -------------------------------------- 지역 막대그래프 ---------------------------------------------
+
+        # 최저가 주유소 정보 라벨    - 고인호
+        namestation = tk.Label(self.frame2, text=OilData.oilAPI.gasStationList[0].name, font=self.mfont, bg=self.groundcolor, fg='white').place(x=Width / 2 , y= Height - 70)
+        placestation = tk.Label(self.frame2, text=OilData.oilAPI.gasStationList[0].roadName, font=self.mfont, bg=self.groundcolor, fg='white').place(x=Width / 2 , y= Height - 50)
     
+
     def select_si(self):
         print(self.selected_si.get())
         self.gu_options = set([i for i in OilData.oilAPI.GuCodeList[OilData.oilAPI.localCodeList[self.selected_si.get()]]])
@@ -237,14 +242,6 @@ class Program:
         # tk.Checkbutton(self.frame2, text='고급 휘발유', command=self.up, image=PGimage).place(x=50, y=400)
         # 버튼
         tk.Button(self.frame2, text="검색", command=self.search, image=SearchImage, borderwidth=0, bg=self.groundcolor).place(x=50,y=Height - 70)
-
-        # 기름값 도표 그리는 캔버스    - 고인호
-        Chart = tk.Canvas(self.frame2, width=ChartWidth, height=ChartHeight)
-        Chart.pack(side=tk.TOP)
-
-        Chart.create_rectangle(100, ChartHeight-70, ChartWidth - 100, ChartHeight-50, fill = 'black', tags='Chart')
-        # tk.Button(Chart, text="검색", command=self.search).pack(side=tk.TOP)
-
 
         self.window.mainloop()
 
