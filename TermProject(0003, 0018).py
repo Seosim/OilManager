@@ -153,11 +153,14 @@ class Program:
         self.mapLabel.place(x=Width // 2, y=Height -MapHeight - 100)
         self.DrawLocalChart()
 
-    def zoom(self, amount): # amount == 줌인ㅡ 줌아웃
-        if amount:
-            MapData.map.ZoomIn()
-        else:
-            MapData.map.ZoomOut()
+    def zoomIn(self): # amount == 줌인ㅡ 줌아웃
+        self.photo = ImageTk.PhotoImage(MapData.map.ZoomIn())
+        self.mapLabel.config(image=self.photo)
+
+
+    def zoomOut(self):
+        self.photo = ImageTk.PhotoImage(MapData.map.ZoomOut())
+        self.mapLabel.config(image=self.photo)
 
     def __init__(self):
         self.window = tk.Tk()
@@ -218,8 +221,8 @@ class Program:
         MainName.place(x=Width/4, y=0)
 
         # 지도를 그리는 캔버스    - 고인호
-        photo = ImageTk.PhotoImage(MapData.map.GetImage())   #지도이미지
-        self.mapLabel = tk.Label(self.frame2, image=photo, width=MapWidth, height=MapHeight)
+        self.photo = ImageTk.PhotoImage(MapData.map.GetImage())   #지도이미지
+        self.mapLabel = tk.Label(self.frame2, image=self.photo, width=MapWidth, height=MapHeight)
         self.mapLabel.place(x=Width//2, y=Height -MapHeight - 100)
 
         # 지역 선택하는 콤보박스    - 고인호
@@ -247,8 +250,8 @@ class Program:
         # 검색 버튼     - 서종배
         tk.Button(self.frame2, text="검색", command=self.search, image=SearchImage, borderwidth=0, bg=self.groundcolor).place(x=50,y=Height - 70)
 
-        tk.Button(self.frame2, text='확대', command=lambda row=1: self.zoom(row),borderwidth=0).place(x=Width//2 - 50, y=Height - MapHeight - 50)
-        tk.Button(self.frame2, text='축소', command=lambda row=-1: self.zoom(row),borderwidth=0).place(x=Width//2 - 50, y=Height - MapHeight - 30)
+        tk.Button(self.frame2, text='확대', command=self.zoomIn,borderwidth=0).place(x=Width//2 - 50, y=Height - MapHeight - 50)
+        tk.Button(self.frame2, text='축소', command=self.zoomOut,borderwidth=0).place(x=Width//2 - 50, y=Height - MapHeight - 30)
 
 # command=lambda row="premiumgasoline": self.DrawChart(row)
         self.window.mainloop()
