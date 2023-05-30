@@ -118,6 +118,8 @@ class Program:
 
         colorlst = ['gold', 'ghost white', 'DarkGoldenrod4', 'gray40']
 
+        self.choice = 0
+
         for i in range(len(OilData.oilAPI.gasStationList)):
             if 0 <= i <= 2:
                 color = colorlst[i]
@@ -130,14 +132,18 @@ class Program:
             count += 1
         self.Chart.create_rectangle(50, Chart2Height - 40, ChartWidth - 50, Chart2Height - 20, fill = 'black', tags='Chart')
         # -------------------------------------- 지역 막대그래프 ---------------------------------------------
-
         # 최저가 주유소 정보 라벨    - 고인호
-        namestation = tk.Label(self.frame2, text=OilData.oilAPI.gasStationList[0].name, font=self.mfont, bg=self.groundcolor, fg='white').place(x=Width / 2 , y= Height - 70)
-        placestation = tk.Label(self.frame2, text=OilData.oilAPI.gasStationList[0].roadName, font=self.mfont, bg=self.groundcolor, fg='white').place(x=Width / 2 , y= Height - 50)
+        self.namestation.config(text=OilData.oilAPI.gasStationList[self.choice].name)
+        self.placestation.config(text=OilData.oilAPI.gasStationList[self.choice].roadName)
 
     def choiseOilStation(self, rank):
+        self.choice = rank
         self.photo = ImageTk.PhotoImage(MapData.map.SetIdx(rank))
         self.mapLabel.config(image=self.photo)
+        # tmp = tk.Canvas(self.frame2, width=Width/2, height=100, bg=self.groundcolor)
+        # tmp.place(x=Width/2, y=Height-80)
+        self.namestation.config(text=OilData.oilAPI.gasStationList[self.choice].name)
+        self.placestation.config(text=OilData.oilAPI.gasStationList[self.choice].roadName)
 
     def select_si(self):
         print(self.selected_si.get())
@@ -228,6 +234,12 @@ class Program:
         self.photo = ImageTk.PhotoImage(MapData.map.GetImage())   #지도이미지
         self.mapLabel = tk.Label(self.frame2, image=self.photo, width=MapWidth, height=MapHeight)
         self.mapLabel.place(x=Width//2, y=Height -MapHeight - 100)
+
+        # 최저가 주유소 정보 라벨    - 고인호
+        self.namestation = tk.Label(self.frame2, text=OilData.oilAPI.gasStationList[0].name, font=self.mfont, bg=self.groundcolor, fg='white')
+        self.namestation.place(x=Width / 2 , y= Height - 70)
+        self.placestation = tk.Label(self.frame2, text=OilData.oilAPI.gasStationList[0].roadName, font=self.mfont, bg=self.groundcolor, fg='white')
+        self.placestation.place(x=Width / 2 , y= Height - 50)
 
         # 지역 선택하는 콤보박스    - 고인호
         self.selected_si = tk.StringVar()
