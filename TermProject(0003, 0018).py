@@ -125,13 +125,20 @@ class Program:
                 color = colorlst[3]
             print(((float)(OilData.oilAPI.gasStationList[i].price) - minprice) / minprice)
             self.Chart.create_rectangle(110 + (120 - 7 * len(OilData.oilAPI.gasStationList)) * count, Chart2Height - ((float)(OilData.oilAPI.gasStationList[i].price) - minprice) / minprice * 200 - 50, 130 + (120 - 7 * len(OilData.oilAPI.gasStationList)) * count, Chart2Height - 20, fill = color, tags='Chart')        
-            tk.Label(self.Chart, text=(str)(i + 1) + "등", font=self.mfont, bg=self.skycolor).place(x=105 + (120 - 7 * len(OilData.oilAPI.gasStationList)) * count, y= Chart2Height-20)
+            tk.Button(self.Chart, text=(str)(i + 1) + "등", font=self.mfont, bg=self.skycolor, command=lambda row=i: self.choiseOilStation(row)).place(x=105 + (120 - 7 * len(OilData.oilAPI.gasStationList)) * count, y= Chart2Height-20)
             tk.Label(self.Chart, text=OilData.oilAPI.gasStationList[i].price, font=self.chart2font, bg=self.skycolor).place(x=105 + (120 - 7 * len(OilData.oilAPI.gasStationList)) * count, y= Chart2Height - ((float)(OilData.oilAPI.gasStationList[i].price) - minprice) / minprice * 200 - 70)
             count += 1
         self.Chart.create_rectangle(50, Chart2Height - 40, ChartWidth - 50, Chart2Height - 20, fill = 'black', tags='Chart')
         # -------------------------------------- 지역 막대그래프 ---------------------------------------------
-        self.namestation.config(text=OilData.oilAPI.gasStationList[0].name)
-        self.placestation.config(text=OilData.oilAPI.gasStationList[0].roadName)
+
+        # 최저가 주유소 정보 라벨    - 고인호
+        namestation = tk.Label(self.frame2, text=OilData.oilAPI.gasStationList[0].name, font=self.mfont, bg=self.groundcolor, fg='white').place(x=Width / 2 , y= Height - 70)
+        placestation = tk.Label(self.frame2, text=OilData.oilAPI.gasStationList[0].roadName, font=self.mfont, bg=self.groundcolor, fg='white').place(x=Width / 2 , y= Height - 50)
+
+    def choiseOilStation(self, rank):
+        self.photo = ImageTk.PhotoImage(MapData.map.SetIdx(rank))
+        self.mapLabel.config(image=self.photo)
+
     def select_si(self):
         print(self.selected_si.get())
         self.gu_options = set([i for i in OilData.oilAPI.GuCodeList[OilData.oilAPI.localCodeList[self.selected_si.get()]]])
@@ -150,10 +157,9 @@ class Program:
         self.mapLabel.place(x=Width // 2, y=Height -MapHeight - 100)
         self.DrawLocalChart()
 
-    def zoomIn(self): # amount == 줌인ㅡ 줌아웃
+    def zoomIn(self):
         self.photo = ImageTk.PhotoImage(MapData.map.ZoomIn())
         self.mapLabel.config(image=self.photo)
-
 
     def zoomOut(self):
         self.photo = ImageTk.PhotoImage(MapData.map.ZoomOut())
@@ -178,7 +184,8 @@ class Program:
         DSimage = tk.PhotoImage(file='./image/Diesel.png')
         GSimage = tk.PhotoImage(file='./image/Gasoline.png')
         bgImage= tk.PhotoImage(file="./image/GasManagerBG.png")
-
+        ziImage = tk.PhotoImage(file="./image/ZoomInButton.png")
+        zoImage = tk.PhotoImage(file="./image/ZoomOutButton.png")
 
         # 오늘 기름 가격 그래프 표시 테스트 - 서종배
         self.notebook = tkinter.ttk.Notebook(self.window, width=Width, height=Height)
@@ -222,12 +229,6 @@ class Program:
         self.mapLabel = tk.Label(self.frame2, image=self.photo, width=MapWidth, height=MapHeight)
         self.mapLabel.place(x=Width//2, y=Height -MapHeight - 100)
 
-        # 최저가 주유소 정보 라벨    - 고인호
-        self.namestation = tk.Label(self.frame2, text=OilData.oilAPI.gasStationList[0].name, font=self.mfont, bg=self.groundcolor, fg='white')
-        self.namestation.place(x=Width / 2 , y= Height - 70)
-        self.placestation = tk.Label(self.frame2, text=OilData.oilAPI.gasStationList[0].roadName, font=self.mfont, bg=self.groundcolor, fg='white')
-        self.placestation.place(x=Width / 2 , y= Height - 50)
-
         # 지역 선택하는 콤보박스    - 고인호
         self.selected_si = tk.StringVar()
         self.selected_si.set("서울")  # 초기값 설정
@@ -253,10 +254,9 @@ class Program:
         # 검색 버튼     - 서종배
         tk.Button(self.frame2, text="검색", command=self.search, image=SearchImage, borderwidth=0, bg=self.groundcolor).place(x=50,y=Height - 70)
 
-        tk.Button(self.frame2, text='확대', command=self.zoomIn,borderwidth=0).place(x=Width//2 - 50, y=Height - MapHeight - 50)
-        tk.Button(self.frame2, text='축소', command=self.zoomOut,borderwidth=0).place(x=Width//2 - 50, y=Height - MapHeight - 30)
+        tk.Button(self.frame2, text='확대', image=ziImage, command=self.zoomIn,borderwidth=0).place(x=Width//2 - 70, y=Height - MapHeight - 70)
+        tk.Button(self.frame2, text='축소', image=zoImage,command=self.zoomOut,borderwidth=0).place(x=Width//2 - 70, y=Height - MapHeight)
 
-# command=lambda row="premiumgasoline": self.DrawChart(row)
         self.window.mainloop()
 
 
