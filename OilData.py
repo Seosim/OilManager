@@ -35,8 +35,8 @@ class GasStation:
 
 class OilAPI:
     def __init__(self):
-        self.localCode = "0111"
-        self.oilName = "고급휘발유"
+        self.localCode = "0116"
+        self.oilName = "경유"
 
         self.gasStationList = []
         self.localCodeList = dict() #지역코드저장 (사용방법 self.localCodeList['서울'] = '01' 반환해줌)
