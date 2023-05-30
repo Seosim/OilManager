@@ -108,7 +108,8 @@ class Program:
         # -------------------------------------- 지역 막대그래프 ---------------------------------------------
         minprice = (float)(OilData.oilAPI.gasStationList[0].price)
         minlocal = 0
-        for i in range(10):
+        print(len(OilData.oilAPI.gasStationList))
+        for i in range(len(OilData.oilAPI.gasStationList)):
             if (float)(OilData.oilAPI.gasStationList[i].price) < minprice:
                 minprice = (float)(OilData.oilAPI.gasStationList[i].price)
                 minlocal = i
@@ -117,14 +118,15 @@ class Program:
 
         colorlst = ['gold', 'ghost white', 'DarkGoldenrod4', 'gray40']
 
-        for i in range(10):
+        for i in range(len(OilData.oilAPI.gasStationList)):
             if 0 <= i <= 2:
                 color = colorlst[i]
             else:
                 color = colorlst[3]
-            self.Chart.create_rectangle(110 + 50 * count, Chart2Height - ((float)(OilData.oilAPI.gasStationList[i].price) - minprice) *1.5 - 100, 130 + 50 * count, Chart2Height - 20, fill = color, tags='Chart')        
-            tk.Label(self.Chart, text=(str)(i + 1) + "등", font=self.mfont, bg=self.skycolor).place(x=105 + 50 * count, y= Chart2Height-20)
-            tk.Label(self.Chart, text=OilData.oilAPI.gasStationList[i].price, font=self.chart2font, bg=self.skycolor).place(x=105 + 50 * count, y= Chart2Height - ((float)(OilData.oilAPI.gasStationList[i].price) - minprice) * 1.5 - 120)
+            print(((float)(OilData.oilAPI.gasStationList[i].price) - minprice) / minprice)
+            self.Chart.create_rectangle(110 + (120 - 7 * len(OilData.oilAPI.gasStationList)) * count, Chart2Height - ((float)(OilData.oilAPI.gasStationList[i].price) - minprice) / minprice * 200 - 50, 130 + (120 - 7 * len(OilData.oilAPI.gasStationList)) * count, Chart2Height - 20, fill = color, tags='Chart')        
+            tk.Label(self.Chart, text=(str)(i + 1) + "등", font=self.mfont, bg=self.skycolor).place(x=105 + (120 - 7 * len(OilData.oilAPI.gasStationList)) * count, y= Chart2Height-20)
+            tk.Label(self.Chart, text=OilData.oilAPI.gasStationList[i].price, font=self.chart2font, bg=self.skycolor).place(x=105 + (120 - 7 * len(OilData.oilAPI.gasStationList)) * count, y= Chart2Height - ((float)(OilData.oilAPI.gasStationList[i].price) - minprice) / minprice * 200 - 70)
             count += 1
         self.Chart.create_rectangle(50, Chart2Height - 40, ChartWidth - 50, Chart2Height - 20, fill = 'black', tags='Chart')
         # -------------------------------------- 지역 막대그래프 ---------------------------------------------
@@ -132,7 +134,6 @@ class Program:
         # 최저가 주유소 정보 라벨    - 고인호
         namestation = tk.Label(self.frame2, text=OilData.oilAPI.gasStationList[0].name, font=self.mfont, bg=self.groundcolor, fg='white').place(x=Width / 2 , y= Height - 70)
         placestation = tk.Label(self.frame2, text=OilData.oilAPI.gasStationList[0].roadName, font=self.mfont, bg=self.groundcolor, fg='white').place(x=Width / 2 , y= Height - 50)
-    
 
     def select_si(self):
         print(self.selected_si.get())
@@ -151,6 +152,12 @@ class Program:
         self.mapLabel['image'] = photo1
         self.mapLabel.place(x=Width // 2, y=Height -MapHeight - 100)
         self.DrawLocalChart()
+
+    def zoom(self, amount): # amount == 줌인ㅡ 줌아웃
+        if amount:
+            MapData.map.ZoomIn()
+        else:
+            MapData.map.ZoomOut()
 
     def __init__(self):
         self.window = tk.Tk()
@@ -194,11 +201,11 @@ class Program:
         self.premiumgasolinebutton = tk.Button(self.frame1, text='고급 휘발유', command=lambda row="premiumgasoline": self.DrawChart(row), image=PGimage,borderwidth=0)
         self.premiumgasolinebutton.place(x=Width/2 + 50, y = 50)
 
-        # Title
+        # Title  - 고인호
         self.n1Title = tk.Label(self.frame1, text="오늘의 기름값", font=self.font, bg=self.skycolor)
         self.n1Title.place(x=Width / 2 - 110, y= 0)
 
-        # 지도 나오는 프레임
+        # 지도 나오는 프레임    - 서종배
         self.frame2 = tk.Frame(self.window)
         self.notebook.add(self.frame2, text="TWO")
         self.notebook.pack()
@@ -236,13 +243,14 @@ class Program:
         self.oil_options = set([i for i in self.oilkind])
         self.oil_combo = tkinter.ttk.Combobox(self.frame2, textvariable=self.selected_oil, values=list(self.oil_options))
         self.oil_combo.place(x = 50, y =Height - 200)
-        # 체크 박스
-        # tk.Checkbutton(self.frame2, text='경유', command=self.up,image=DSimage).place(x=50, y=300)
-        # tk.Checkbutton(self.frame2, text='휘발유', command=self.up, image=GSimage).place(x=50, y=350)
-        # tk.Checkbutton(self.frame2, text='고급 휘발유', command=self.up, image=PGimage).place(x=50, y=400)
-        # 버튼
+
+        # 검색 버튼     - 서종배
         tk.Button(self.frame2, text="검색", command=self.search, image=SearchImage, borderwidth=0, bg=self.groundcolor).place(x=50,y=Height - 70)
 
+        tk.Button(self.frame2, text='확대', command=lambda row=1: self.zoom(row),borderwidth=0).place(x=Width//2 - 50, y=Height - MapHeight - 50)
+        tk.Button(self.frame2, text='축소', command=lambda row=-1: self.zoom(row),borderwidth=0).place(x=Width//2 - 50, y=Height - MapHeight - 30)
+
+# command=lambda row="premiumgasoline": self.DrawChart(row)
         self.window.mainloop()
 
 
