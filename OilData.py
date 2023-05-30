@@ -6,10 +6,11 @@ import json
 from KeyData import *
 
 class GasStation:
-    def __init__(self, name, roadName, price, id):
+    def __init__(self, name, roadName, oRoadName, price, id):
         self.name = name
+        self.oldRoadName = oRoadName
         self.roadName = roadName
-        x,y = addr_to_lat_lon(roadName)
+        x,y = addr_to_lat_lon(roadName, oRoadName)
         self.x = str(x)
         self.y = str(y)
         #self.price = {"DIESEL" : dVal, "GASOLINE" : gVal, "PRE_GASOLINE": pVal}
@@ -78,7 +79,7 @@ class OilAPI:
         url_cheapOS = f"http://www.opinet.co.kr/api/lowTop10.do?code={OilAPIcode}&out=xml&prodcd={oilCode}&area={self.localCode}&cnt=10"
         result_cheapOS = xmltodict.parse(requests.get(url_cheapOS).content)
         for gas in result_cheapOS['RESULT']['OIL']:
-            gs = GasStation(gas['OS_NM'], gas['VAN_ADR'], gas['PRICE'], gas['UNI_ID'])
+            gs = GasStation(gas['OS_NM'], gas['NEW_ADR'],gas['VAN_ADR'], gas['PRICE'], gas['UNI_ID'])
             self.gasStationList.append(gs)
 
     def GetTodayOilPrice(self):  # 오늘 기름 평균값을 알려주는 함수(Dict로 리턴)
@@ -130,11 +131,20 @@ class OilAPI:
     def GetStationInfo(self, idx): #주유소 정보 리턴 함수
         return self.gasStationList[idx].getInfo()
 
-def addr_to_lat_lon(addr):  #주소를 위도 경도로 반환하는 함수
+def addr_to_lat_lon(addr, oAddr):  #주소를 위도 경도로 반환하는 함수
     posUrl = 'https://dapi.kakao.com/v2/local/search/address.json?query={address}'.format(address=addr)
+    headers = {"Authorization": "KakaoAK " + kakaoAPIcode}
+    posResult = json.loads(str(requests.get(posUrl, headers=headers).text))
+
+    if len(posResult['documents']):
+        match_first = posResult['documents'][0]['address']
+        return float(match_first['x']), float(match_first['y'])
+
+    posUrl = 'https://dapi.kakao.com/v2/local/search/address.json?query={address}'.format(address=oAddr)
     headers = {"Authorization": "KakaoAK " + kakaoAPIcode}
     posResult = json.loads(str(requests.get(posUrl, headers=headers).text))
     match_first = posResult['documents'][0]['address']
     return float(match_first['x']), float(match_first['y'])
+
 
 oilAPI = OilAPI()
