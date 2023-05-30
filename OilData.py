@@ -35,8 +35,8 @@ class GasStation:
 
 class OilAPI:
     def __init__(self):
-        self.localCode = "0116"
-        self.oilName = "경유"
+        self.localCode = "0111"
+        self.oilName = "고급휘발유"
 
         self.gasStationList = []
         self.localCodeList = dict() #지역코드저장 (사용방법 self.localCodeList['서울'] = '01' 반환해줌)
@@ -78,7 +78,7 @@ class OilAPI:
         url_cheapOS = f"http://www.opinet.co.kr/api/lowTop10.do?code={OilAPIcode}&out=xml&prodcd={oilCode}&area={self.localCode}&cnt=10"
         result_cheapOS = xmltodict.parse(requests.get(url_cheapOS).content)
         for gas in result_cheapOS['RESULT']['OIL']:
-            gs = GasStation(gas['OS_NM'], gas['NEW_ADR'], gas['PRICE'], gas['UNI_ID'])
+            gs = GasStation(gas['OS_NM'], gas['VAN_ADR'], gas['PRICE'], gas['UNI_ID'])
             self.gasStationList.append(gs)
 
     def GetTodayOilPrice(self):  # 오늘 기름 평균값을 알려주는 함수(Dict로 리턴)
