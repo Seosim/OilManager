@@ -127,7 +127,7 @@ class Program:
                 color = colorlst[3]
             print(((float)(OilData.oilAPI.gasStationList[i].price) - minprice) / minprice)
             self.Chart.create_rectangle(110 + (120 - 7 * len(OilData.oilAPI.gasStationList)) * count, Chart2Height - ((float)(OilData.oilAPI.gasStationList[i].price) - minprice) / minprice * 200 - 50, 130 + (120 - 7 * len(OilData.oilAPI.gasStationList)) * count, Chart2Height - 20, fill = color, tags='Chart')        
-            tk.Button(self.Chart, text=(str)(i + 1) + "등", font=self.mfont, bg=self.skycolor, command=lambda row=i: self.choiseOilStation(row)).place(x=105 + (120 - 7 * len(OilData.oilAPI.gasStationList)) * count, y= Chart2Height-20)
+            tk.Button(self.Chart, image=self.numImage[i], font=self.mfont, bg=self.skycolor, command=lambda row=i: self.choiseOilStation(row), borderwidth=0).place(x=105 + (120 - 7 * len(OilData.oilAPI.gasStationList)) * count, y= Chart2Height-20)
             tk.Label(self.Chart, text=OilData.oilAPI.gasStationList[i].price, font=self.chart2font, bg=self.skycolor).place(x=105 + (120 - 7 * len(OilData.oilAPI.gasStationList)) * count, y= Chart2Height - ((float)(OilData.oilAPI.gasStationList[i].price) - minprice) / minprice * 200 - 70)
             count += 1
         self.Chart.create_rectangle(50, Chart2Height - 40, ChartWidth - 50, Chart2Height - 20, fill = 'black', tags='Chart')
@@ -192,6 +192,7 @@ class Program:
         bgImage= tk.PhotoImage(file="./image/GasManagerBG.png")
         ziImage = tk.PhotoImage(file="./image/ZoomInButton.png")
         zoImage = tk.PhotoImage(file="./image/ZoomOutButton.png")
+        self.numImage = [tk.PhotoImage(file='./image/'+str(i+1)+"Button.png") for i in range(10)]
 
         # 오늘 기름 가격 그래프 표시 테스트 - 서종배
         self.notebook = tkinter.ttk.Notebook(self.window, width=Width, height=Height)
