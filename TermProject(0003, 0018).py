@@ -117,7 +117,6 @@ class Program:
 
         colorlst = ['gold', 'ghost white', 'DarkGoldenrod4', 'gray40']
 
-
         for i in range(len(OilData.oilAPI.gasStationList)):
             if 0 <= i <= 2:
                 color = colorlst[i]
@@ -133,6 +132,7 @@ class Program:
         self.namestation.config(text=OilData.oilAPI.gasStationList[self.choice].name)
         self.placestation.config(text=OilData.oilAPI.gasStationList[self.choice].roadName)
 
+
     def choiseOilStation(self, rank):
         self.choice = rank
         self.photo = ImageTk.PhotoImage(MapData.map.SetIdx(rank))
@@ -142,6 +142,7 @@ class Program:
         self.namestation.config(text=OilData.oilAPI.gasStationList[self.choice].name)
         self.placestation.config(text=OilData.oilAPI.gasStationList[self.choice].roadName)
 
+
     def select_si(self):
         print(self.selected_si.get())
         if self.selected_si.get() != '세종':
@@ -150,6 +151,7 @@ class Program:
 
         self.gu_options = tkinter.ttk.Combobox(self.frame2, textvariable=self.selected_gu, values=list(self.gu_options), postcommand=self.select_si)
         self.gu_options.place(x = 50, y =Height - 125)
+
 
     def search(self):
         # OilData.oilAPI.SetLocalCode(OilData.oilAPI.localCodeList[self.selected_si.get()])
@@ -173,6 +175,9 @@ class Program:
     def zoomOut(self):
         self.photo = ImageTk.PhotoImage(MapData.map.ZoomOut())
         self.mapLabel.config(image=self.photo)
+
+    def SaveOilStation(self):
+        OilData.oilAPI.SaveOilStation(self.choice)
 
     def __init__(self):
         self.window = tk.Tk()
@@ -275,7 +280,8 @@ class Program:
 
         tk.Button(self.frame2, text='확대', image=ziImage, command=self.zoomIn,borderwidth=0).place(x=Width//2 - 70, y=Height - MapHeight - 90)
         tk.Button(self.frame2, text='축소', image=zoImage,command=self.zoomOut,borderwidth=0).place(x=Width//2 - 70, y=Height - MapHeight)
-        tk.Button(self.frame2, image=starImage,command=lambda row=self.choice: OilData.oilAPI.SaveOilStation(row), borderwidth=0).place(x=Width//2 - 70, y=Height - MapHeight + 90)
+        self.startbutton = tk.Button(self.frame2, image=starImage,command=self.SaveOilStation, borderwidth=0)
+        self.startbutton.place(x=Width//2 - 70, y=Height - MapHeight + 90)
 
         # 즐겨찾기 노트북 - 서종배
         self.frame3 = tk.Frame(self.window)
