@@ -298,7 +298,11 @@ class Program:
         self.searchButton = tk.Button(self.frame3, image=SearchImage, borderwidth=0)
         self.searchButton.place(x=Width // 2, y=Height - 75)
 
-
+        self.selected_oilstation = tk.StringVar()
+        self.selected_oilstation.set("")  # 초기값 설정
+        self.station_options = set([i for i in OilData.oilAPI.saveOilStation])
+        self.station_options = tkinter.ttk.Combobox(self.frame3, textvariable=self.selected_oilstation, values=list(self.station_options))
+        self.station_options.place(x = 50, y =125)
 
 
         self.window.mainloop()

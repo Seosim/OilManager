@@ -124,9 +124,6 @@ class OilAPI:
     def SaveOilStation(self, idx):  #주유소 즐겨찾기 함수
         g = self.gasStationList[idx]
         self.saveOilStation[g.id] = g
-        print(self.gasStationList)
-        print(g)
-        print(self.saveOilStation)
 
     def RemoveOilStation(self, name):   #주유소 즐겨찾기 해제 함수
         self.saveOilStation.pop(name)
