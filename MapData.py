@@ -48,13 +48,13 @@ class Map:
 
     def ZoomIn(self):   #지도 확대
         self.level += 1
-        if self.level > 20: self.level = 20
+        if self.level > 17: self.level = 17
         self.markers = f"""type:d|size:mid|pos:{self.lon} {self.lat}|color:red"""
         return self.GetImage()
 
     def ZoomOut(self):
         self.level -= 1
-        if self.level < 0: self.level = 0
+        if self.level < 10: self.level = 10
         return self.GetImage()
 
     def GetImage(self):
