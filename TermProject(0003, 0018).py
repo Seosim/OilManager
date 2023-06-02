@@ -152,7 +152,6 @@ class Program:
         self.gu_options = tkinter.ttk.Combobox(self.frame2, textvariable=self.selected_gu, values=list(self.gu_options), postcommand=self.select_si)
         self.gu_options.place(x = 50, y =Height - 125)
 
-
     def search(self):
         # OilData.oilAPI.SetLocalCode(OilData.oilAPI.localCodeList[self.selected_si.get()])
         if self.selected_gu.get() != "세종":
@@ -177,7 +176,19 @@ class Program:
         self.mapLabel.config(image=self.photo)
 
     def SaveOilStation(self):
-        OilData.oilAPI.SaveOilStation(self.choice)
+        if OilData.oilAPI.gasStationList[self.choice] in OilData.oilAPI.saveOilStation:
+            print("asd")
+            OilData.oilAPI.RemoveOilStation(self.choice)
+        else:
+            OilData.oilAPI.SaveOilStation(self.choice)
+        self.station_options = set([i for i in OilData.oilAPI.saveOilStation])
+        self.station_options = tkinter.ttk.Combobox(self.frame3, textvariable=self.selected_oilstation, values=list(self.station_options))
+        self.station_options.place(x = 50, y =125)
+
+    def research(self):
+        oilstation = OilData.oilAPI.saveOilStation[self.selected_oilstation.get()]
+        self.choiceOilStation = tk.Label(self.frame3, text=oilstation.name, font=self.mfont, bg=self.skycolor)
+        self.choiceOilStation.place(x=100, y = Height-100)
 
     def __init__(self):
         self.window = tk.Tk()
@@ -295,7 +306,7 @@ class Program:
         self.mapLabel3.place(x=Width // 2, y=Height - MapHeight - 250)
 
         #즐겨찾기 검색 버튼
-        self.searchButton = tk.Button(self.frame3, image=SearchImage, borderwidth=0)
+        self.searchButton = tk.Button(self.frame3, image=SearchImage, borderwidth=0, command=self.research)
         self.searchButton.place(x=Width // 2, y=Height - 75)
 
         self.selected_oilstation = tk.StringVar()
