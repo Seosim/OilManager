@@ -178,6 +178,13 @@ class Program:
     def SaveOilStation(self):
         if OilData.oilAPI.gasStationList[self.choice].id in OilData.oilAPI.saveOilStation:
             OilData.oilAPI.RemoveOilStation(OilData.oilAPI.gasStationList[self.choice].id)
+            if not OilData.oilAPI.saveOilStation:
+                self.selected_oilstation = tk.StringVar()
+                self.selected_oilstation.set("")  # 초기값 설정
+
+                self.choiceOilStationname.config(text="")
+                self.choiceOilStationroadName.config(text="")
+                self.choiceOilStationprice.config(text="")
         else:
             OilData.oilAPI.SaveOilStation(self.choice)
         self.station_options = set([i for i in OilData.oilAPI.saveOilStation])
@@ -186,8 +193,9 @@ class Program:
 
     def research(self):
         oilstation = OilData.oilAPI.saveOilStation[self.selected_oilstation.get()]
-        self.choiceOilStation = tk.Label(self.frame3, text=oilstation.name, font=self.mfont, bg=self.skycolor)
-        self.choiceOilStation.place(x=100, y = Height-100)
+        self.choiceOilStationname.config(text=oilstation.name)
+        self.choiceOilStationroadName.config(text=oilstation.roadName)
+        self.choiceOilStationprice.config(text=oilstation.price)
 
     def __init__(self):
         self.window = tk.Tk()
@@ -313,6 +321,13 @@ class Program:
         self.station_options = set([i for i in OilData.oilAPI.saveOilStation])
         self.station_options = tkinter.ttk.Combobox(self.frame3, textvariable=self.selected_oilstation, values=list(self.station_options))
         self.station_options.place(x = 50, y =125)
+
+        self.choiceOilStationname = tk.Label(self.frame3, text="", font=self.mfont, bg=self.skycolor)
+        self.choiceOilStationname.place(x=50, y = Height/2 - 40)
+        self.choiceOilStationroadName = tk.Label(self.frame3, text="", font=self.mfont, bg=self.skycolor)
+        self.choiceOilStationroadName.place(x=50, y = Height/2 - 20)
+        self.choiceOilStationprice = tk.Label(self.frame3, text="", font=self.mfont, bg=self.skycolor)
+        self.choiceOilStationprice.place(x=50, y = Height/2)
 
 
         self.window.mainloop()
