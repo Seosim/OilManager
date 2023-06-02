@@ -176,9 +176,8 @@ class Program:
         self.mapLabel.config(image=self.photo)
 
     def SaveOilStation(self):
-        if OilData.oilAPI.gasStationList[self.choice] in OilData.oilAPI.saveOilStation:
-            print("asd")
-            OilData.oilAPI.RemoveOilStation(self.choice)
+        if OilData.oilAPI.gasStationList[self.choice].id in OilData.oilAPI.saveOilStation:
+            OilData.oilAPI.RemoveOilStation(OilData.oilAPI.gasStationList[self.choice].id)
         else:
             OilData.oilAPI.SaveOilStation(self.choice)
         self.station_options = set([i for i in OilData.oilAPI.saveOilStation])
