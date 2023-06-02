@@ -142,7 +142,6 @@ class Program:
         self.namestation.config(text=OilData.oilAPI.gasStationList[self.choice].name)
         self.placestation.config(text=OilData.oilAPI.gasStationList[self.choice].roadName)
 
-
     def select_si(self):
         print(self.selected_si.get())
         if self.selected_si.get() != '세종':
@@ -184,18 +183,20 @@ class Program:
 
                 self.choiceOilStationname.config(text="")
                 self.choiceOilStationroadName.config(text="")
+                self.choiceOilStationoldRoadName.config(text="")
                 self.choiceOilStationprice.config(text="")
         else:
             OilData.oilAPI.SaveOilStation(self.choice)
         self.station_options = set([i for i in OilData.oilAPI.saveOilStation])
         self.station_options = tkinter.ttk.Combobox(self.frame3, textvariable=self.selected_oilstation, values=list(self.station_options))
-        self.station_options.place(x = 50, y =125)
+        self.station_options.place(x = 30, y =Height-75)
 
     def research(self):
         oilstation = OilData.oilAPI.saveOilStation[self.selected_oilstation.get()]
-        self.choiceOilStationname.config(text=oilstation.name)
-        self.choiceOilStationroadName.config(text=oilstation.roadName)
-        self.choiceOilStationprice.config(text=oilstation.price)
+        self.choiceOilStationname.config(text=                      "주유소 이름 :   " + oilstation.name)
+        self.choiceOilStationroadName.config(text=                  "도로명 주소 :  " + oilstation.roadName)
+        self.choiceOilStationoldRoadName.config(text=               "구 주소명    :  " + oilstation.oldRoadName)
+        self.choiceOilStationprice.config(text=oilstation.oilkind + "가격 : "+ oilstation.price)
 
     def __init__(self):
         self.window = tk.Tk()
@@ -314,20 +315,22 @@ class Program:
 
         #즐겨찾기 검색 버튼
         self.searchButton = tk.Button(self.frame3, image=SearchImage, borderwidth=0, command=self.research)
-        self.searchButton.place(x=Width // 2, y=Height - 75)
+        self.searchButton.place(x=200, y=Height - 100)
 
         self.selected_oilstation = tk.StringVar()
         self.selected_oilstation.set("")  # 초기값 설정
         self.station_options = set([i for i in OilData.oilAPI.saveOilStation])
         self.station_options = tkinter.ttk.Combobox(self.frame3, textvariable=self.selected_oilstation, values=list(self.station_options))
-        self.station_options.place(x = 50, y =125)
+        self.station_options.place(x = 30, y =Height-75)
 
         self.choiceOilStationname = tk.Label(self.frame3, text="", font=self.mfont, bg=self.skycolor)
-        self.choiceOilStationname.place(x=50, y = Height/2 - 40)
+        self.choiceOilStationname.place(x=30, y = Height/2 + 20)
         self.choiceOilStationroadName = tk.Label(self.frame3, text="", font=self.mfont, bg=self.skycolor)
-        self.choiceOilStationroadName.place(x=50, y = Height/2 - 20)
+        self.choiceOilStationroadName.place(x=30, y = Height/2 + 40)
+        self.choiceOilStationoldRoadName = tk.Label(self.frame3, text="", font=self.mfont, bg=self.skycolor)
+        self.choiceOilStationoldRoadName.place(x=30, y = Height/2 + 60)
         self.choiceOilStationprice = tk.Label(self.frame3, text="", font=self.mfont, bg=self.skycolor)
-        self.choiceOilStationprice.place(x=50, y = Height/2)
+        self.choiceOilStationprice.place(x=30, y = Height/2 + 80)
 
 
         self.window.mainloop()
