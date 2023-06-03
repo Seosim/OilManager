@@ -2,6 +2,7 @@ import requests
 import xmltodict
 
 import json
+import spam
 
 from KeyData import *
 
@@ -54,6 +55,18 @@ class OilAPI:
         self.GetCurrent7DaysPrice()
 
         self.saveOilStation = {}    #주유소 즐겨찾기 목록
+
+    def writeFile(self):
+        text = ""
+        for gas in self.saveOilStation:
+            oilstation = self.saveOilStation[gas].getInfo()
+            text += "주유소 이름 : " + oilstation['OS_NM']+'\n' + "도로명 주소 : " + oilstation['NEW_ADR'] + '\n'\
+            + "구 주소명 : " + oilstation['VAN_ADR'] + '\n' \
+            + "경유 가격 : " + oilstation['OIL_PRICE'][0]['PRICE'] + '\n'\
+            + "휘발유 가격 : " + oilstation['OIL_PRICE'][1]['PRICE'] + '\n'\
+            + "세차장 유무 : " + oilstation['CAR_WASH_YN'] + '\n' \
+            + "편의점 유무 : " + oilstation['CVS_YN'] + '\n\n\n\n'
+        spam.writeFile(text)
 
     def SetOilName(self, name):
         self.oilName = name

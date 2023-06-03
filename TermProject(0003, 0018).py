@@ -338,6 +338,10 @@ class Program:
         self.choiceOilStationprice = tk.Label(self.frame3, text="", font=self.mfont, bg=self.skycolor)
         self.choiceOilStationprice.place(x=30, y = Height/2 + 80)
 
+        #저장 버튼 - 서종배
+        saveImage = tk.PhotoImage(file='./image/SaveButton.png')
+        self.saveButton = tk.Button(self.frame3, image=saveImage, command=OilData.oilAPI.writeFile)
+        self.saveButton.place(x=Width - 100, y=Height-75)
 
         self.window.mainloop()
 
