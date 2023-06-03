@@ -198,6 +198,9 @@ class Program:
         self.choiceOilStationoldRoadName.config(text=               "구 주소명    :  " + oilstation.oldRoadName)
         self.choiceOilStationprice.config(text=oilstation.oilkind + "가격 : "+ oilstation.price)
 
+        self.photo2 = ImageTk.PhotoImage(MapData.map.SetStarIdx(oilstation.id))
+        self.mapLabel3.config(image=self.photo2)
+
     def __init__(self):
         self.window = tk.Tk()
         self.window.title("기름값 도우미")

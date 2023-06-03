@@ -46,6 +46,13 @@ class Map:
         self.markers = f"""type:d|size:mid|pos:{self.lon} {self.lat}|color:red"""
         return self.GetImage()
 
+    def SetStarIdx(self, idx):
+        self.idx = idx
+        self.lon, self.lat = OilData.oilAPI.saveOilStation[self.idx].getPos()
+        self.center = f"{self.lon},{self.lat}"
+        self.markers = f"""type:d|size:mid|pos:{self.lon} {self.lat}|color:red"""
+        return self.GetImage()
+
     def ZoomIn(self):   #지도 확대
         self.level += 1
         if self.level > 17: self.level = 17
