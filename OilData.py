@@ -26,10 +26,9 @@ class GasStation:
         print("위도/경도 : " + self.x + ' / ' + self.y)
 
     def getInfo(self):
-        info = "주유소 이름 : " + self.name + '\n'
-        info += "도로명 주소 : " + self.roadName + '\n'
-        info += "가격 : " + self.price
-        return info
+        infoUrl = f"http://www.opinet.co.kr/api/detailById.do?code={OilAPIcode}&out=xml&id={self.id}"
+        infoResult = xmltodict.parse(requests.get(infoUrl).content)
+        return infoResult["RESULT"]['OIL']
 
 
     def getPos(self):

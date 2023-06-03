@@ -193,13 +193,15 @@ class Program:
         self.station_options.place(x = 30, y =Height-75)
 
     def research(self):
-        oilstation = OilData.oilAPI.saveOilStation[self.selected_oilstation.get()]
-        self.choiceOilStationname.config(text="주유소 이름 : " + oilstation.name)
-        self.choiceOilStationroadName.config(text="도로명 주소 : " + oilstation.roadName)
-        self.choiceOilStationoldRoadName.config(text="구 주소명 : " + oilstation.oldRoadName)
-        self.choiceOilStationprice.config(text=oilstation.oilkind + "가격 : "+ oilstation.price)
-
-        self.photo2 = ImageTk.PhotoImage(MapData.map.SetStarIdx(oilstation.id))
+        oilstation = OilData.oilAPI.saveOilStation[self.selected_oilstation.get()].getInfo()
+        self.choiceOilStationname.config(text="주유소 이름 : " + oilstation['OS_NM'])
+        self.choiceOilStationroadName.config(text="도로명 주소 : " + oilstation['NEW_ADR'])
+        self.choiceOilStationoldRoadName.config(text="구 주소명 : " + oilstation['VAN_ADR'])
+        self.choiceOilStationprice.config(text="경유 가격 : "  + oilstation['OIL_PRICE'][0]['PRICE'] + '\n'\
+                                                "휘발유 가격 : "+ oilstation['OIL_PRICE'][1]['PRICE'] + '\n'\
+                                                "세차장 유무 : "+ oilstation['CAR_WASH_YN'] + '\n'\
+                                                "편의점 유무 : "+ oilstation['CVS_YN'])
+        self.photo2 = ImageTk.PhotoImage(MapData.map.SetStarIdx(oilstation['UNI_ID']))
         self.mapLabel3.config(image=self.photo2)
 
     def __init__(self):
