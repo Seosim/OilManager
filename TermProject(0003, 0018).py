@@ -175,8 +175,8 @@ class Program:
         self.mapLabel.config(image=self.photo)
 
     def SaveOilStation(self):
-        if OilData.oilAPI.gasStationList[self.choice].id in OilData.oilAPI.saveOilStation:
-            OilData.oilAPI.RemoveOilStation(OilData.oilAPI.gasStationList[self.choice].id)
+        if OilData.oilAPI.gasStationList[self.choice].name in OilData.oilAPI.saveOilStation:
+            OilData.oilAPI.RemoveOilStation(OilData.oilAPI.gasStationList[self.choice].name)
             if not OilData.oilAPI.saveOilStation:
                 self.selected_oilstation = tk.StringVar()
                 self.selected_oilstation.set("")  # 초기값 설정
@@ -201,7 +201,7 @@ class Program:
                                                 "휘발유 가격 : "+ oilstation['OIL_PRICE'][1]['PRICE'] + '\n'\
                                                 "세차장 유무 : "+ oilstation['CAR_WASH_YN'] + '\n'\
                                                 "편의점 유무 : "+ oilstation['CVS_YN'])
-        self.photo2 = ImageTk.PhotoImage(MapData.map.SetStarIdx(oilstation['UNI_ID']))
+        self.photo2 = ImageTk.PhotoImage(MapData.map.SetStarIdx(oilstation['OS_NM']))
         self.mapLabel3.config(image=self.photo2)
 
     def __init__(self):
