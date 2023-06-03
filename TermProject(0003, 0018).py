@@ -185,6 +185,7 @@ class Program:
                 self.choiceOilStationroadName.config(text="")
                 self.choiceOilStationoldRoadName.config(text="")
                 self.choiceOilStationprice.config(text="")
+                self.mapLabel3.config(image=self.mapImage)
         else:
             OilData.oilAPI.SaveOilStation(self.choice)
         self.station_options = set([i for i in OilData.oilAPI.saveOilStation])
@@ -193,9 +194,9 @@ class Program:
 
     def research(self):
         oilstation = OilData.oilAPI.saveOilStation[self.selected_oilstation.get()]
-        self.choiceOilStationname.config(text=                      "주유소 이름 :   " + oilstation.name)
-        self.choiceOilStationroadName.config(text=                  "도로명 주소 :  " + oilstation.roadName)
-        self.choiceOilStationoldRoadName.config(text=               "구 주소명    :  " + oilstation.oldRoadName)
+        self.choiceOilStationname.config(text="주유소 이름 : " + oilstation.name)
+        self.choiceOilStationroadName.config(text="도로명 주소 : " + oilstation.roadName)
+        self.choiceOilStationoldRoadName.config(text="구 주소명 : " + oilstation.oldRoadName)
         self.choiceOilStationprice.config(text=oilstation.oilkind + "가격 : "+ oilstation.price)
 
         self.photo2 = ImageTk.PhotoImage(MapData.map.SetStarIdx(oilstation.id))
