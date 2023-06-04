@@ -17,6 +17,10 @@ ChartHeight = 300
 Chart2Height = 250
 
 class Program:
+    def QuitMethod(self):
+        OilData.oilAPI.SaveFile()
+        self.window.quit()
+
     def DrawChart(self, kind):     #  - 고인호
         self.Chart = tk.Canvas(self.frame1, width=ChartWidth, height=ChartHeight, bg=self.skycolor)
         self.Chart.place(y=Height - ChartHeight * 1.5)
@@ -343,8 +347,7 @@ class Program:
         self.saveButton = tk.Button(self.frame3, image=saveImage, command=OilData.oilAPI.writeFile)
         self.saveButton.place(x=Width - 100, y=Height-75)
 
-        self.jsonButton = tk.Button(self.frame3, command=OilData.oilAPI.SaveFile)
-        self.jsonButton.place(x=50, y=50)
+        self.window.protocol('WM_DELETE_WINDOW', self.QuitMethod)
 
         self.window.mainloop()
 
