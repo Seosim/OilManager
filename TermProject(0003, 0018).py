@@ -343,6 +343,9 @@ class Program:
         self.saveButton = tk.Button(self.frame3, image=saveImage, command=OilData.oilAPI.writeFile)
         self.saveButton.place(x=Width - 100, y=Height-75)
 
+        self.jsonButton = tk.Button(self.frame3, command=OilData.oilAPI.SaveFile)
+        self.jsonButton.place(x=50, y=50)
+
         self.window.mainloop()
 
 

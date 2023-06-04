@@ -55,6 +55,7 @@ class OilAPI:
         self.GetCurrent7DaysPrice()
 
         self.saveOilStation = {}    #주유소 즐겨찾기 목록
+        self.ReadFile()
 
     def writeFile(self):
         text = ""
@@ -67,6 +68,45 @@ class OilAPI:
             + "세차장 유무 : " + oilstation['CAR_WASH_YN'] + '\n' \
             + "편의점 유무 : " + oilstation['CVS_YN'] + '\n\n\n\n'
         spam.writeFile(text)
+
+    def SaveFile(self):
+        file_path = 'data.json'
+
+        data = {}
+        data['station'] = []
+        for code in self.saveOilStation:
+            data['station'].append({
+                "name": self.saveOilStation[code].name,
+                "oldRoadName": self.saveOilStation[code].oldRoadName,
+                "roadName": self.saveOilStation[code].roadName,
+                "x": self.saveOilStation[code].x,
+                "y": self.saveOilStation[code].y,
+                "price": self.saveOilStation[code].price,
+                "oilkind": self.saveOilStation[code].oilkind,
+                "id": self.saveOilStation[code].id
+            })
+
+        with open(file_path, 'w', encoding='utf-8') as outfile:
+            json.dump(data, outfile, indent=4, ensure_ascii=False)
+
+    def ReadFile(self):
+        file_path = 'data.json'
+
+
+
+        with open(file_path, 'r', encoding='utf-8') as f:
+            try:
+                json_data = json.load(f)
+                if json_data: pass
+                else:
+                    return True  # JSON 데이터가 비어있음
+            except json.decoder.JSONDecodeError:
+                return True  # 유효한 JSON 형식이 아님
+
+        for data in json_data['station']:
+            GS = GasStation(data['name'], data['roadName'], data['oldRoadName'], data['price'], data['id'], data['oilkind'])
+            self.saveOilStation[data['name']] = GS
+
 
     def SetOilName(self, name):
         self.oilName = name
