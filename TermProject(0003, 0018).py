@@ -127,7 +127,7 @@ class Program:
             else:
                 color = colorlst[3]
             self.Chart.create_rectangle(110 + (120 - 7 * len(OilData.oilAPI.gasStationList)) * count, Chart2Height - ((float)(OilData.oilAPI.gasStationList[i].price) - minprice) / minprice * 200 - 50, 130 + (120 - 7 * len(OilData.oilAPI.gasStationList)) * count, Chart2Height - 20, fill = color, tags='Chart')        
-            tk.Button(self.Chart, image=self.numImage[i], font=self.mfont, bg=self.skycolor, command=lambda row=i: self.choiseOilStation(row), borderwidth=0).place(x=105 + (120 - 7 * len(OilData.oilAPI.gasStationList)) * count, y= Chart2Height-20)
+            tk.Button(self.Chart, image=self.numImage[i], font=self.mfont, bg=self.skycolor, command=lambda row=i: self.choiseOilStation(row)).place(x=105 + (120 - 7 * len(OilData.oilAPI.gasStationList)) * count, y= Chart2Height-20)
             tk.Label(self.Chart, text=OilData.oilAPI.gasStationList[i].price, font=self.chart2font, bg=self.skycolor).place(x=105 + (120 - 7 * len(OilData.oilAPI.gasStationList)) * count, y= Chart2Height - ((float)(OilData.oilAPI.gasStationList[i].price) - minprice) / minprice * 200 - 70)
             count += 1
         self.Chart.create_rectangle(50, Chart2Height - 40, ChartWidth - 50, Chart2Height - 20, fill = 'black', tags='Chart')
@@ -245,13 +245,13 @@ class Program:
 
 
         # 기름 선택 버튼    - 고인호
-        self.disselbutton = tk.Button(self.frame1, text='경유', command=lambda row="dissel": self.DrawChart(row), image=DSimage,borderwidth=0 )
+        self.disselbutton = tk.Button(self.frame1, text='경유', command=lambda row="dissel": self.DrawChart(row), image=DSimage )
         self.disselbutton.place(x=Width/2 - 150, y=50)
 
-        self.gasolinebutton = tk.Button(self.frame1, text='휘발유', command=lambda row="gasoline": self.DrawChart(row), image=GSimage,borderwidth=0)
+        self.gasolinebutton = tk.Button(self.frame1, text='휘발유', command=lambda row="gasoline": self.DrawChart(row), image=GSimage)
         self.gasolinebutton.place(x=Width/2 - 50, y = 50)
 
-        self.premiumgasolinebutton = tk.Button(self.frame1, text='고급 휘발유', command=lambda row="premiumgasoline": self.DrawChart(row), image=PGimage,borderwidth=0)
+        self.premiumgasolinebutton = tk.Button(self.frame1, text='고급 휘발유', command=lambda row="premiumgasoline": self.DrawChart(row), image=PGimage)
         self.premiumgasolinebutton.place(x=Width/2 + 50, y = 50)
 
         # Title  - 고인호
@@ -305,12 +305,12 @@ class Program:
         self.oil_combo.place(x = 50, y =Height - 200)
 
         # 검색 버튼     - 서종배
-        tk.Button(self.frame2, text="검색", command=self.search, image=SearchImage, borderwidth=0, bg=self.groundcolor).place(x=50,y=Height - 70)
+        tk.Button(self.frame2, text="검색", command=self.search, image=SearchImage).place(x=50,y=Height - 70)
 
-        tk.Button(self.frame2, text='확대', image=ziImage, command=self.zoomIn,borderwidth=0).place(x=Width//2 - 70, y=Height - MapHeight - 90)
-        tk.Button(self.frame2, text='축소', image=zoImage,command=self.zoomOut,borderwidth=0).place(x=Width//2 - 70, y=Height - MapHeight)
-        self.startbutton = tk.Button(self.frame2, image=starImage,command=self.SaveOilStation, borderwidth=0)
-        self.startbutton.place(x=Width//2 - 70, y=Height - MapHeight + 90)
+        tk.Button(self.frame2, text='확대', image=ziImage, command=self.zoomIn).place(x=Width//2 - 100, y=Height - MapHeight + 60)
+        tk.Button(self.frame2, text='축소', image=zoImage,command=self.zoomOut).place(x=Width//2 - 100, y=Height - MapHeight + 150)
+        self.startbutton = tk.Button(self.frame2, image=starImage,command=self.SaveOilStation)
+        self.startbutton.place(x=150,y=Height - 70)
 
         # 즐겨찾기 노트북 - 서종배
         self.frame3 = tk.Frame(self.window)
@@ -324,8 +324,8 @@ class Program:
         self.mapLabel3.place(x=Width // 2, y=Height - MapHeight - 250)
 
         #즐겨찾기 검색 버튼
-        self.searchButton = tk.Button(self.frame3, image=SearchImage, borderwidth=0, command=self.research)
-        self.searchButton.place(x=200, y=Height - 100)
+        self.searchButton = tk.Button(self.frame3, image=SearchImage, command=self.research)
+        self.searchButton.place(x=200, y=Height - 75)
 
         self.selected_oilstation = tk.StringVar()
         self.selected_oilstation.set("")  # 초기값 설정
@@ -347,9 +347,19 @@ class Program:
         self.saveButton = tk.Button(self.frame3, image=saveImage, command=OilData.oilAPI.writeFile)
         self.saveButton.place(x=Width - 100, y=Height-75)
 
+        #삭제 버튼 - 서종배
+        removeImage = tk.PhotoImage(file='./image/RemoveButton.png')
+        self.deleteButton = tk.Button(self.frame3, command=self.Remove, image=removeImage)
+        self.deleteButton.place(x=Width - 250, y=Height-75)
+
         self.window.protocol('WM_DELETE_WINDOW', self.QuitMethod)
 
         self.window.mainloop()
 
+    def Remove(self):
+        OilData.oilAPI.RemoveOilStation(self.selected_oilstation.get())
+        self.station_options = set([i for i in OilData.oilAPI.saveOilStation])
+        self.station_options = tkinter.ttk.Combobox(self.frame3, textvariable=self.selected_oilstation, values=list(self.station_options))
+        self.station_options.place(x = 30, y =Height-75)
 
 Program()        
