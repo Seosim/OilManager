@@ -128,7 +128,7 @@ class Program:
             else:
                 color = colorlst[3]
             self.Chart.create_rectangle(110 + (120 - 7 * len(OilData.oilAPI.gasStationList)) * count, Chart2Height - ((float)(OilData.oilAPI.gasStationList[i].price) - minprice) / minprice * 200 - 50, 130 + (120 - 7 * len(OilData.oilAPI.gasStationList)) * count, Chart2Height - 20, fill = color, tags='Chart')        
-            tk.Button(self.Chart, image=self.numImage[i], font=self.mfont, bg=self.skycolor, command=lambda row=i: self.choiseOilStation(row)).place(x=105 + (120 - 7 * len(OilData.oilAPI.gasStationList)) * count, y= Chart2Height-20)
+            tk.Button(self.Chart, image=self.numImage[i], font=self.mfont, bg=self.skycolor, command=lambda row=i: self.choiseOilStation(row), borderwidth=0).place(x=105 + (120 - 7 * len(OilData.oilAPI.gasStationList)) * count, y= Chart2Height-20)
             tk.Label(self.Chart, text=OilData.oilAPI.gasStationList[i].price, font=self.chart2font, bg=self.skycolor).place(x=105 + (120 - 7 * len(OilData.oilAPI.gasStationList)) * count, y= Chart2Height - ((float)(OilData.oilAPI.gasStationList[i].price) - minprice) / minprice * 200 - 70)
             count += 1
         self.Chart.create_rectangle(50, Chart2Height - 40, ChartWidth - 50, Chart2Height - 20, fill = 'black', tags='Chart')

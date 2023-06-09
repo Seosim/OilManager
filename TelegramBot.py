@@ -48,7 +48,6 @@ def handle(msg):
             message += "편의점 유무 : " + oilstation['CVS_YN'] + '\n\n\n\n'
         bot.sendMessage("5719105561", message)
 
-
 bot = telepot.Bot(KeyData.tel_key)
 bot.sendMessage(KeyData.tel_id, "안녕하세요 기름값도우미 봇입니다.")
 bot.message_loop(handle)
