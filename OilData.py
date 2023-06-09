@@ -57,16 +57,19 @@ class OilAPI:
         self.saveOilStation = {}    #주유소 즐겨찾기 목록
         self.ReadFile()
 
+        self.telegramStation = []
+
     def writeFile(self):
         text = ""
         for gas in self.saveOilStation:
             oilstation = self.saveOilStation[gas].getInfo()
-            text += "주유소 이름 : " + oilstation['OS_NM']+'\n' + "도로명 주소 : " + oilstation['NEW_ADR'] + '\n'\
-            + "구 주소명 : " + oilstation['VAN_ADR'] + '\n' \
-            + "경유 가격 : " + oilstation['OIL_PRICE'][0]['PRICE'] + '\n'\
-            + "휘발유 가격 : " + oilstation['OIL_PRICE'][1]['PRICE'] + '\n'\
-            + "세차장 유무 : " + oilstation['CAR_WASH_YN'] + '\n' \
-            + "편의점 유무 : " + oilstation['CVS_YN'] + '\n\n\n\n'
+            text += "주유소 이름 : " + oilstation['OS_NM'] + '\n' + "도로명 주소 : " + oilstation['NEW_ADR'] + '\n' \
+                    + "구 주소명 : " + oilstation['VAN_ADR'] + '\n'
+            for price in oilstation['OIL_PRICE']:
+                if price['PRODCD'] == 'D047' : text += "경유 가격 : " + price['PRICE'] + '\n'
+                elif price['PRODCD'] == 'B027': text += "휘발유 가격 : " + price['PRICE'] + '\n'
+            text += "세차장 유무 : " + oilstation['CAR_WASH_YN'] + '\n'
+            text += "편의점 유무 : " + oilstation['CVS_YN'] + '\n\n\n\n'
         spam.writeFile(text)
 
     def SaveFile(self):
@@ -134,6 +137,19 @@ class OilAPI:
         for gas in result_cheapOS['RESULT']['OIL']:
             gs = GasStation(gas['OS_NM'], gas['NEW_ADR'],gas['VAN_ADR'], gas['PRICE'], gas['UNI_ID'], self.oilName)
             self.gasStationList.append(gs)
+
+    def TelegramCheap(self, local, oil):
+        self.telegramStation.clear()
+        if oil == '경유':
+            oilCode = 'D047'
+        elif oil == '휘발유':
+            oilCode = 'B027'
+
+        url_cheapOST = f"http://www.opinet.co.kr/api/lowTop10.do?code={OilAPIcode}&out=xml&prodcd={oilCode}&area={local}&cnt=10"
+        result_cheapOST = xmltodict.parse(requests.get(url_cheapOST).content)
+        for gas in result_cheapOST['RESULT']['OIL']:
+            gs = GasStation(gas['OS_NM'], gas['NEW_ADR'],gas['VAN_ADR'], gas['PRICE'], gas['UNI_ID'], oil)
+            self.telegramStation.append(gs)
 
     def GetTodayOilPrice(self):  # 오늘 기름 평균값을 알려주는 함수(Dict로 리턴)
         url_todayOilPrice = f'http://www.opinet.co.kr/api/avgAllPrice.do?code={OilAPIcode}&out=xml'

@@ -5,6 +5,7 @@ from PIL import ImageTk
 
 import MapData
 import OilData
+import TelegramBot
 
 Width = 700
 Height = 700
