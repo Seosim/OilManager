@@ -34,7 +34,7 @@ def handle(msg):
                 elif price['PRODCD'] == 'B027': message += "휘발유 가격 : " + price['PRICE'] + '\n'
             message += "세차장 유무 : " + oilstation['CAR_WASH_YN'] + '\n'
             message += "편의점 유무 : " + oilstation['CVS_YN'] + '\n\n\n\n'
-        bot.sendMessage("5719105561", message)
+        bot.sendMessage(KeyData.tel_id, message)
     elif args[0] == '즐겨찾기':
         message += " 즐겨찾기된 주유소 정보입니다.\n\n"
         for gas in OilData.oilAPI.saveOilStation:
@@ -46,7 +46,7 @@ def handle(msg):
                 elif price['PRODCD'] == 'B027': message += "휘발유 가격 : " + price['PRICE'] + '\n'
             message += "세차장 유무 : " + oilstation['CAR_WASH_YN'] + '\n'
             message += "편의점 유무 : " + oilstation['CVS_YN'] + '\n\n\n\n'
-        bot.sendMessage("5719105561", message)
+        bot.sendMessage(KeyData.tel_id, message)
 
 bot = telepot.Bot(KeyData.tel_key)
 bot.sendMessage(KeyData.tel_id, "안녕하세요 기름값도우미 봇입니다.")
