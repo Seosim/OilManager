@@ -202,8 +202,13 @@ class Program:
         self.choiceOilStationname.config(text="주유소 이름 : " + oilstation['OS_NM'])
         self.choiceOilStationroadName.config(text="도로명 주소 : " + oilstation['NEW_ADR'])
         self.choiceOilStationoldRoadName.config(text="구 주소명 : " + oilstation['VAN_ADR'])
-        self.choiceOilStationprice.config(text="경유 가격 : "  + oilstation['OIL_PRICE'][0]['PRICE'] + '\n'\
-                                                "휘발유 가격 : "+ oilstation['OIL_PRICE'][1]['PRICE'] + '\n'\
+        p = ''
+        for price in oilstation['OIL_PRICE']:
+            if price['PRODCD'] == 'D047':
+                p += "경유 가격 : " + price['PRICE'] + '\n'
+            elif price['PRODCD'] == 'B027':
+                p += "휘발유 가격 : " + price['PRICE'] + '\n'
+        self.choiceOilStationprice.config(text= p +\
                                                 "세차장 유무 : "+ oilstation['CAR_WASH_YN'] + '\n'\
                                                 "편의점 유무 : "+ oilstation['CVS_YN'])
         self.photo2 = ImageTk.PhotoImage(MapData.map.SetStarIdx(oilstation['OS_NM']))
